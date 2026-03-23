@@ -1,0 +1,2049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>DealFlow Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --primary: #1B4FD8;
+  --primary-light: #EEF2FF;
+  --primary-dark: #1338A8;
+  --accent: #0EA5E9;
+  --success: #059669;
+  --success-light: #ECFDF5;
+  --warning: #D97706;
+  --warning-light: #FFFBEB;
+  --danger: #DC2626;
+  --danger-light: #FEF2F2;
+  --bg: #F8F9FC;
+  --surface: #FFFFFF;
+  --surface2: #F1F5F9;
+  --border: #E2E8F0;
+  --border-strong: #CBD5E1;
+  --text: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #94A3B8;
+  --navy: #0F172A;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+/* ── TOPBAR ── */
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 0 16px; height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.logo { display: flex; align-items: center; gap: 8px; }
+.logo-mark { width: 32px; height: 32px; background: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.logo-mark svg { width: 18px; height: 18px; fill: white; }
+.logo-text { font-size: 17px; font-weight: 800; color: var(--navy); letter-spacing: -0.3px; }
+.logo-text span { color: var(--primary); }
+#api-btn {
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text-secondary); font-size: 12px; font-weight: 600;
+  padding: 6px 12px; border-radius: 20px; cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif; transition: all .2s;
+}
+#api-btn.active { background: var(--success-light); border-color: var(--success); color: var(--success); }
+
+/* ── BOTTOM NAV ── */
+#nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: var(--surface); border-top: 1px solid var(--border);
+  display: flex; padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+#nav::-webkit-scrollbar { display: none; }
+.nb {
+  flex: none; min-width: 64px; display: flex; flex-direction: column;
+  align-items: center; padding: 8px 4px 6px; font-size: 9px; font-weight: 700;
+  color: var(--text-muted); cursor: pointer; border: none; background: none;
+  font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: 0.3px;
+  transition: color .15s; white-space: nowrap;
+}
+.nb .ic { font-size: 19px; margin-bottom: 2px; }
+.nb.active { color: var(--primary); }
+
+/* ── PAGES ── */
+.page { display: none; padding: 68px 0 80px; min-height: 100vh; }
+.page.active { display: block; }
+.pi { padding: 0 16px; }
+
+/* ── HERO SECTION ── */
+.page-hero {
+  background: linear-gradient(135deg, var(--primary) 0%, #1338A8 100%);
+  padding: 20px 16px 24px; margin-bottom: 0;
+  color: white;
+}
+.page-hero h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 4px; }
+.page-hero p { font-size: 13px; opacity: 0.8; line-height: 1.5; }
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px; margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+.card-flat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+.card-blue { background: var(--primary-light); border: 1px solid #C7D7F9; border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+.card-success { background: var(--success-light); border: 1px solid #A7F3D0; border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+.card-warning { background: var(--warning-light); border: 1px solid #FDE68A; border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+.card-danger { background: var(--danger-light); border: 1px solid #FECACA; border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+
+.card-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--text-muted); margin-bottom: 12px;
+}
+.card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.card-sub { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+
+/* ── INPUTS ── */
+input, select, textarea {
+  width: 100%; background: var(--surface); border: 1.5px solid var(--border);
+  color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px; font-weight: 500; padding: 12px 14px; border-radius: 10px;
+  outline: none; transition: border-color .15s, box-shadow .15s;
+  -webkit-appearance: none; appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--primary); box-shadow: 0 0 0 3px rgba(27,79,216,.1);
+}
+input::placeholder { color: var(--text-muted); font-weight: 400; }
+textarea { resize: vertical; min-height: 80px; }
+label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px; margin-top: 14px; }
+label:first-child { margin-top: 0; }
+select option { background: white; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: block; width: 100%; padding: 13px 16px; border-radius: 10px;
+  font-size: 15px; font-weight: 700; cursor: pointer; border: none;
+  text-align: center; transition: all .15s; margin-top: 10px;
+  font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.1px;
+}
+.btn-primary { background: var(--primary); color: white; box-shadow: 0 2px 8px rgba(27,79,216,.3); }
+.btn-primary:active { background: var(--primary-dark); transform: scale(0.98); }
+.btn-outline { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); }
+.btn-outline:active { background: var(--primary-light); }
+.btn-success { background: var(--success); color: white; }
+.btn-danger { background: var(--danger); color: white; }
+.btn-ghost { background: var(--surface2); color: var(--text-secondary); border: 1px solid var(--border); }
+.btn-sm { padding: 8px 14px; font-size: 12px; width: auto; display: inline-block; margin-top: 0; border-radius: 8px; }
+.btn-white { background: white; color: var(--primary); font-weight: 700; }
+
+/* ── STAT BOXES ── */
+.stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; padding: 16px; background: white; border-bottom: 1px solid var(--border); }
+.stat-box { text-align: center; }
+.stat-val { font-size: 24px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
+.stat-label { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+/* ── LEAD ITEMS ── */
+.lead-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px; margin-bottom: 8px;
+  box-shadow: var(--shadow); display: flex; justify-content: space-between;
+  align-items: flex-start; gap: 10px; cursor: pointer;
+  transition: box-shadow .15s, border-color .15s;
+}
+.lead-item:active { box-shadow: var(--shadow-md); border-color: var(--primary); }
+.lead-name { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.lead-addr { font-size: 12px; color: var(--text-secondary); margin-bottom: 3px; }
+.lead-meta { font-size: 11px; color: var(--text-muted); }
+
+/* ── BADGES ── */
+.badge {
+  display: inline-flex; align-items: center; font-size: 10px; font-weight: 700;
+  padding: 3px 9px; border-radius: 20px; white-space: nowrap; letter-spacing: 0.3px;
+}
+.badge-new { background: #EFF6FF; color: #1D4ED8; }
+.badge-contacted { background: #FFFBEB; color: #92400E; }
+.badge-offer { background: #F0FDF4; color: #166534; }
+.badge-contract { background: #ECFDF5; color: var(--success); border: 1px solid #A7F3D0; }
+.badge-closed { background: var(--success); color: white; }
+.badge-buyer { background: var(--primary-light); color: var(--primary); }
+.badge-vacant { background: #FEF2F2; color: #991B1B; }
+.badge-prefc { background: #FFF7ED; color: #9A3412; }
+.badge-tax { background: #FFFBEB; color: #92400E; }
+.badge-d4d { background: #EFF6FF; color: #1E40AF; }
+
+/* ── RESULT ROWS ── */
+.r-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.r-row:last-child { border-bottom: none; }
+.r-label { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+.r-val { font-size: 14px; font-weight: 700; color: var(--text); }
+.r-val.primary { color: var(--primary); }
+.r-val.success { color: var(--success); }
+.r-val.danger { color: var(--danger); }
+.r-val.warning { color: var(--warning); }
+.r-val.lg { font-size: 20px; }
+
+/* ── MODAL ── */
+#mo {
+  display: none; position: fixed; inset: 0; z-index: 300;
+  background: rgba(15,23,42,0.6); align-items: flex-end;
+  backdrop-filter: blur(2px);
+}
+#mo.open { display: flex; }
+#mb {
+  background: var(--surface); width: 100%; border-radius: 20px 20px 0 0;
+  max-height: 92vh; overflow-y: auto; padding: 20px 18px 44px;
+  box-shadow: 0 -4px 30px rgba(0,0,0,0.15);
+}
+.mh { width: 36px; height: 4px; background: var(--border-strong); border-radius: 2px; margin: 0 auto 18px; }
+#mb h2 { font-size: 20px; font-weight: 800; margin-bottom: 16px; letter-spacing: -0.3px; }
+
+/* ── AI CHAT ── */
+#ai-msgs { max-height: 260px; overflow-y: auto; margin-bottom: 10px; }
+.a-msg { margin-bottom: 8px; padding: 10px 13px; border-radius: 12px; font-size: 13px; line-height: 1.6; }
+.a-msg.user { background: var(--primary); color: white; margin-left: 28px; border-radius: 12px 12px 4px 12px; }
+.a-msg.ai { background: var(--surface2); color: var(--text); margin-right: 28px; border-radius: 12px 12px 12px 4px; }
+.a-lbl { font-size: 9px; font-weight: 800; color: var(--primary); margin-bottom: 3px; letter-spacing: 1px; text-transform: uppercase; }
+.ai-row { display: flex; gap: 8px; }
+.ai-row input { flex: 1; font-size: 14px; padding: 11px 13px; }
+.ai-send { background: var(--primary); color: white; border: none; border-radius: 10px; padding: 0 16px; font-size: 16px; cursor: pointer; flex-shrink: 0; }
+
+/* ── TABS ── */
+.tabs { display: flex; gap: 6px; padding: 14px 16px 2px; overflow-x: auto; -webkit-overflow-scrolling: touch; background: var(--surface); border-bottom: 1px solid var(--border); }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; border: 1.5px solid var(--border); background: transparent; color: var(--text-secondary); font-family: 'Plus Jakarta Sans', sans-serif; transition: all .15s; }
+.tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+/* ── SECTION HEADER ── */
+.sec-hdr { display: flex; justify-content: space-between; align-items: center; padding: 16px 16px 10px; }
+.sec-hdr h2 { font-size: 18px; font-weight: 800; letter-spacing: -0.3px; }
+
+/* ── SOURCE CARDS ── */
+.src-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 13px; margin-bottom: 8px;
+  cursor: pointer; transition: all .15s; box-shadow: var(--shadow);
+}
+.src-item:active { border-color: var(--primary); box-shadow: var(--shadow-md); }
+.src-item-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+.src-item-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.src-item-arrow { font-size: 12px; color: var(--primary); font-weight: 700; }
+.src-item-body { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+
+/* ── STEP LIST ── */
+.step-item { display: flex; gap: 13px; margin-bottom: 18px; align-items: flex-start; }
+.step-num { width: 30px; height: 30px; border-radius: 50%; background: var(--primary); color: white; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.step-body h3 { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+.step-body p { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+
+/* ── COMPLIANCE BOXES ── */
+.box-ok { background: var(--success-light); border: 1px solid #6EE7B7; border-radius: 10px; padding: 13px; margin-bottom: 10px; }
+.box-ok-title { font-size: 11px; font-weight: 800; color: var(--success); margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+.box-warn { background: var(--warning-light); border: 1px solid #FCD34D; border-radius: 10px; padding: 13px; margin-bottom: 10px; }
+.box-warn-title { font-size: 11px; font-weight: 800; color: var(--warning); margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+.box-danger { background: var(--danger-light); border: 1px solid #FECACA; border-radius: 10px; padding: 13px; margin-bottom: 10px; }
+.box-danger-title { font-size: 11px; font-weight: 800; color: var(--danger); margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+/* ── QUICK ACTION GRID ── */
+.qa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.qa-btn {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 14px 12px; text-align: center; cursor: pointer;
+  box-shadow: var(--shadow); transition: all .15s;
+}
+.qa-btn:active { border-color: var(--primary); background: var(--primary-light); }
+.qa-icon { font-size: 22px; margin-bottom: 5px; }
+.qa-label { font-size: 11px; font-weight: 700; color: var(--text); }
+.qa-sub { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+
+/* ── CONTRACT TEXT ── */
+pre.contract { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; line-height: 1.8; white-space: pre-wrap; color: var(--text); }
+
+/* ── ANIMATIONS ── */
+@keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.page.active .card, .page.active .lead-item, .page.active .stat-box { animation: slideUp .2s ease both; }
+
+/* ── UTILS ── */
+.divider { height: 1px; background: var(--border); margin: 14px 0; }
+.text-primary { color: var(--primary); }
+.text-success { color: var(--success); }
+.text-muted { color: var(--text-muted); }
+.text-secondary { color: var(--text-secondary); }
+.text-sm { font-size: 12px; }
+.text-xs { font-size: 11px; }
+.fw-bold { font-weight: 700; }
+.mt { margin-top: 10px; }
+.frow { display: flex; gap: 8px; }
+.frow > * { flex: 1; }
+.pill { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- ── TOPBAR ── -->
+<div id="topbar">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22" fill="none" stroke="white" stroke-width="2"/></svg>
+    </div>
+    <span class="logo-text">Deal<span>Flow</span> Pro</span>
+  </div>
+  <button id="api-btn" onclick="openApiModal()">⚙ AI Setup</button>
+</div>
+
+<!-- ════════════ HOME ════════════ -->
+<div class="page active" id="page-home">
+  <div style="background:linear-gradient(135deg,#1B4FD8,#1338A8);padding:20px 16px 28px;color:white;">
+    <p style="font-size:12px;opacity:.7;font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">South Carolina Wholesaling</p>
+    <h2 style="font-size:26px;font-weight:800;letter-spacing:-0.5px;margin-bottom:8px">Your Deal Dashboard</h2>
+    <p style="font-size:13px;opacity:.8">Find leads · Run numbers · Close deals · Collect fees</p>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-box"><div class="stat-val" id="st-leads">0</div><div class="stat-label">Leads</div></div>
+    <div class="stat-box"><div class="stat-val" id="st-deals">0</div><div class="stat-label">Deals</div></div>
+    <div class="stat-box"><div class="stat-val" id="st-fees">$0</div><div class="stat-label">Fees</div></div>
+  </div>
+  <div class="pi" style="padding-top:14px">
+    <!-- AI ASSISTANT -->
+    <div class="card">
+      <div class="card-label">AI Wholesaling Assistant</div>
+      <div id="ai-msgs"></div>
+      <div class="ai-row">
+        <input id="ai-in" type="text" placeholder="Ask anything — deals, scripts, strategy..." onkeydown="if(event.key==='Enter')sendAI()"/>
+        <button class="ai-send" onclick="sendAI()">↑</button>
+      </div>
+    </div>
+    <!-- QUICK ACTIONS -->
+    <div class="card-label" style="padding:0 0 8px">Quick Actions</div>
+    <div class="qa-grid">
+      <div class="qa-btn" onclick="navTo('search')"><div class="qa-icon">🏡</div><div class="qa-label">SC Search</div><div class="qa-sub">Find properties</div></div>
+      <div class="qa-btn" onclick="navTo('find')"><div class="qa-icon">🔍</div><div class="qa-label">Find Leads</div><div class="qa-sub">Free sources</div></div>
+      <div class="qa-btn" onclick="navTo('calc')"><div class="qa-icon">🧮</div><div class="qa-label">Run Numbers</div><div class="qa-sub">MAO calculator</div></div>
+      <div class="qa-btn" onclick="navTo('outreach')"><div class="qa-icon">📞</div><div class="qa-label">Outreach</div><div class="qa-sub">Scripts & offers</div></div>
+      <div class="qa-btn" onclick="navTo('buyers')"><div class="qa-icon">💼</div><div class="qa-label">Cash Buyers</div><div class="qa-sub">Build your list</div></div>
+      <div class="qa-btn" onclick="navTo('guide')"><div class="qa-icon">📚</div><div class="qa-label">Learn</div><div class="qa-sub">Step-by-step guide</div></div>
+    </div>
+    <!-- ACTIVITY -->
+    <div class="card">
+      <div class="card-label">Recent Activity</div>
+      <div id="activity-list"><p class="text-sm text-muted">No activity yet — add your first lead to get started.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ SC SEARCH ════════════ -->
+<div class="page" id="page-search">
+  <div style="background:linear-gradient(135deg,#1B4FD8,#0EA5E9);padding:20px 16px 24px;color:white;">
+    <p style="font-size:11px;opacity:.75;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">South Carolina</p>
+    <h2 style="font-size:22px;font-weight:800;letter-spacing:-0.3px;margin-bottom:4px">Property Search</h2>
+    <p style="font-size:12px;opacity:.8">Find motivated sellers across all SC markets</p>
+  </div>
+  <div class="pi" style="padding-top:14px">
+    <div class="card">
+      <div class="card-label">Search Filters</div>
+      <label>City / Market</label>
+      <select id="sc-city">
+        <option value="all">All of South Carolina</option>
+        <option value="Columbia">Columbia</option>
+        <option value="Charleston">Charleston</option>
+        <option value="Greenville">Greenville</option>
+        <option value="Spartanburg">Spartanburg</option>
+        <option value="Myrtle Beach">Myrtle Beach</option>
+        <option value="Rock Hill">Rock Hill</option>
+        <option value="Florence">Florence</option>
+        <option value="Sumter">Sumter</option>
+      </select>
+      <label>Lead Type</label>
+      <select id="sc-ltype">
+        <option value="all">All Distressed</option>
+        <option value="vacant">Vacant / Abandoned</option>
+        <option value="prefc">Pre-Foreclosure</option>
+        <option value="tax">Tax Delinquent</option>
+        <option value="equity">High Equity / Long-Term Owner</option>
+        <option value="fsbo">FSBO — For Sale by Owner</option>
+        <option value="reo">Bank Owned / REO</option>
+      </select>
+      <label>Property Type</label>
+      <select id="sc-ptype">
+        <option value="any">Any Type</option>
+        <option value="Single Family">Single Family</option>
+        <option value="Multi-Family">Multi-Family</option>
+        <option value="Land">Land / Lot</option>
+        <option value="Commercial">Commercial</option>
+      </select>
+      <div class="frow mt">
+        <button class="btn btn-primary" onclick="runSCSearch()">Search Now</button>
+        <button class="btn btn-outline" onclick="aiSCSearch()">🤖 AI Insights</button>
+      </div>
+    </div>
+
+    <div id="sc-results" style="display:none">
+      <div class="card" id="sc-market-intel" style="display:none">
+        <div class="card-label" id="sc-intel-label">Market Intel</div>
+        <p class="text-sm" id="sc-intel-body" style="line-height:1.7;color:var(--text-secondary)"></p>
+        <a id="sc-intel-link" href="#" target="_blank" style="color:var(--primary);font-size:12px;font-weight:600;margin-top:6px;display:block"></a>
+      </div>
+      <div class="card">
+        <div class="card-label" id="sc-results-title">Sources & Tools</div>
+        <div id="sc-results-list"></div>
+        <button class="btn btn-primary mt" onclick="openAddLead('new')">+ Add Lead I Found</button>
+      </div>
+    </div>
+
+    <div id="sc-ai-result"></div>
+
+    <!-- TOOLS -->
+    <div class="card">
+      <div class="card-label">Top Free SC Search Tools</div>
+      <div class="src-item" onclick="window.open('https://propwire.com','_blank')">
+        <div class="src-item-top"><span class="src-item-title">PropWire.com — Best Free Tool</span><span class="src-item-arrow">→</span></div>
+        <p class="src-item-body">Filter vacant, pre-FC, tax delinquent, absentee owners across all SC counties. 100% free.</p>
+      </div>
+      <div class="src-item" onclick="window.open('https://www.foreclosure.com/listing/search.html?st=SC','_blank')">
+        <div class="src-item-top"><span class="src-item-title">Foreclosure.com — SC</span><span class="src-item-arrow">→</span></div>
+        <p class="src-item-body">Pre-foreclosure and bank-owned listings across South Carolina.</p>
+      </div>
+      <div class="src-item" onclick="window.open('https://www.zillow.com/sc/fsbo/','_blank')">
+        <div class="src-item-top"><span class="src-item-title">Zillow SC — FSBO Listings</span><span class="src-item-arrow">→</span></div>
+        <p class="src-item-body">For-sale-by-owner listings statewide. Filter by city and price.</p>
+      </div>
+      <div class="src-item" onclick="window.open('https://www.hudhomestore.gov/Listing/PropertySearchResult.aspx?sState=SC','_blank')">
+        <div class="src-item-top"><span class="src-item-title">HUD Homes — South Carolina</span><span class="src-item-arrow">→</span></div>
+        <p class="src-item-body">Government-owned foreclosures. Heavily discounted, investor-eligible.</p>
+      </div>
+      <div class="src-item" onclick="window.open('https://www.auction.com/residential/?state=SC','_blank')">
+        <div class="src-item-top"><span class="src-item-title">Auction.com — SC Foreclosures</span><span class="src-item-arrow">→</span></div>
+        <p class="src-item-body">Online auction for bank-owned and foreclosure properties in SC.</p>
+      </div>
+    </div>
+
+    <!-- COUNTIES -->
+    <div class="card">
+      <div class="card-label">SC County Public Records (Free)</div>
+      <p class="text-sm text-secondary" style="margin-bottom:12px;line-height:1.5">Tap any county to open its official property & tax records portal:</p>
+      <div id="sc-counties"></div>
+    </div>
+
+    <!-- REIA -->
+    <div class="card">
+      <div class="card-label">SC Investor Networks</div>
+      <div class="src-item" onclick="window.open('https://www.google.com/search?q=Columbia+SC+REIA','_blank')"><div class="src-item-top"><span class="src-item-title">Columbia REIA</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Richland County investors. Strong rental demand near USC.</p></div>
+      <div class="src-item" onclick="window.open('https://www.google.com/search?q=Charleston+SC+real+estate+investors+REIA','_blank')"><div class="src-item-top"><span class="src-item-title">Charleston Investors Group</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Most active SC market. High buyer demand for wholesale deals.</p></div>
+      <div class="src-item" onclick="window.open('https://www.google.com/search?q=Greenville+SC+REIA+investor+association','_blank')"><div class="src-item-top"><span class="src-item-title">Greenville / Upstate REIA</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Fast-growing market. BMW & Michelin worker rental demand.</p></div>
+      <div class="src-item" onclick="window.open('https://www.facebook.com/groups/search/results/?q=south+carolina+real+estate+investors','_blank')"><div class="src-item-top"><span class="src-item-title">SC Facebook Investor Groups</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Multiple active SC investor groups. Best free buyer-finding tool.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ FIND LEADS ════════════ -->
+<div class="page" id="page-find">
+  <div style="background:linear-gradient(135deg,#1B4FD8,#1338A8);padding:20px 16px 24px;color:white;">
+    <h2 style="font-size:22px;font-weight:800;letter-spacing:-0.3px;margin-bottom:4px">Find Properties</h2>
+    <p style="font-size:12px;opacity:.8">Free sources for motivated seller leads</p>
+  </div>
+  <div class="tabs" id="find-tabs">
+    <button class="tab active" onclick="switchFind('vacant',this)">Vacant</button>
+    <button class="tab" onclick="switchFind('prefc',this)">Pre-FC</button>
+    <button class="tab" onclick="switchFind('tax',this)">Tax Due</button>
+    <button class="tab" onclick="switchFind('d4d',this)">D4D</button>
+    <button class="tab" onclick="switchFind('lists',this)">Lists</button>
+  </div>
+  <div class="pi" style="padding-top:14px">
+
+    <div id="find-vacant">
+      <div class="card-blue"><div class="card-title">🏚 Vacant & Abandoned Finder</div><p class="card-sub">Properties with no occupants — often distressed owners motivated to sell fast for any price.</p></div>
+      <div class="src-item" onclick="window.open('https://propwire.com','_blank')"><div class="src-item-top"><span class="src-item-title">PropWire — Vacant Filter</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Best free tool. Filter "Vacant" by any SC city or county on an interactive map.</p></div>
+      <div class="src-item" onclick="openSearch('county assessor property search vacant SC')"><div class="src-item-top"><span class="src-item-title">County Assessor — No Homestead</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Properties with no homestead exemption = likely vacant or absentee. Free public records.</p></div>
+      <div class="src-item"><div class="src-item-top"><span class="src-item-title">Drive Your Target Areas</span></div><p class="src-item-body">Overgrown yard · Boarded windows · Piled mail · No cars · Peeling paint · Tarps on roof. Log them in the D4D tab.</p></div>
+      <button class="btn btn-primary mt" onclick="openAddLead('vacant')">+ Log Vacant Property</button>
+    </div>
+
+    <div id="find-prefc" style="display:none">
+      <div class="card-blue"><div class="card-title">⚠️ Pre-Foreclosure Leads</div><p class="card-sub">Homeowners who received a Notice of Default. Extremely motivated — they need to sell before losing the home.</p></div>
+      <div class="src-item" onclick="window.open('https://www.foreclosure.com/listing/search.html?st=SC','_blank')"><div class="src-item-top"><span class="src-item-title">Foreclosure.com — SC</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Free limited pre-foreclosure search for SC. Filter by city and county.</p></div>
+      <div class="src-item" onclick="window.open('https://www.sccourts.org/caseSearch/','_blank')"><div class="src-item-top"><span class="src-item-title">SC Courts — Lis Pendens Search</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Lis Pendens filings are public record. Search statewide. Free.</p></div>
+      <div class="src-item" onclick="window.open('https://propwire.com','_blank')"><div class="src-item-top"><span class="src-item-title">PropWire Pre-FC Filter</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Filter pre-foreclosure for any SC city. Free map view.</p></div>
+      <div class="card-success" style="margin-top:10px"><div class="card-title" style="color:var(--success)">💡 What to Say</div><p class="card-sub">"Hi [Name], I heard you may be going through some challenges with your home. I buy properties for cash, as-is, and can close fast — before anything goes to the bank. Would you be open to a quick conversation?"</p></div>
+      <button class="btn btn-primary mt" onclick="openAddLead('prefc')">+ Add Pre-FC Lead</button>
+    </div>
+
+    <div id="find-tax" style="display:none">
+      <div class="card-blue"><div class="card-title">💸 Tax Delinquent Leads</div><p class="card-sub">Owners who haven't paid property taxes. Overwhelmed and often willing to sell at a discount to avoid losing the property at tax sale.</p></div>
+      <div class="src-item" onclick="window.open('https://www.sctax.org','_blank')"><div class="src-item-top"><span class="src-item-title">SC DOR — Delinquent Tax Info</span><span class="src-item-arrow">→</span></div><p class="src-item-body">SC Department of Revenue — property tax information and county contacts.</p></div>
+      <div class="src-item" onclick="openSearch('county delinquent tax list public records South Carolina')"><div class="src-item-top"><span class="src-item-title">County Tax Office — Free Lists</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Each SC county publishes delinquent tax lists — required by law. Call your county tax office and ask for it. It's free.</p></div>
+      <div class="src-item" onclick="window.open('https://www.charlestoncounty.org/departments/treasurer/tax-sale.php','_blank')"><div class="src-item-top"><span class="src-item-title">Charleston County Tax Sale List</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Published annually. Golden leads — owners are extremely motivated.</p></div>
+      <div class="src-item" onclick="window.open('https://propwire.com','_blank')"><div class="src-item-top"><span class="src-item-title">PropWire — Tax Delinquent Filter</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Free. Filter tax delinquent properties for any SC city on a map.</p></div>
+      <button class="btn btn-primary mt" onclick="openAddLead('tax')">+ Add Tax Lead</button>
+    </div>
+
+    <div id="find-d4d" style="display:none">
+      <div class="card-blue"><div class="card-title">🚗 Driving for Dollars</div><p class="card-sub">Drive your target neighborhoods and tap the button every time you spot a distressed property. Everything saves automatically.</p></div>
+      <div class="card">
+        <div class="card-label">What to Look For</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="background:var(--surface2);border-radius:8px;padding:10px;font-size:12px;color:var(--text-secondary)">🌿 Overgrown lawn</div>
+          <div style="background:var(--surface2);border-radius:8px;padding:10px;font-size:12px;color:var(--text-secondary)">🪟 Boarded windows</div>
+          <div style="background:var(--surface2);border-radius:8px;padding:10px;font-size:12px;color:var(--text-secondary)">📬 Piled up mail</div>
+          <div style="background:var(--surface2);border-radius:8px;padding:10px;font-size:12px;color:var(--text-secondary)">🎨 Peeling paint</div>
+          <div style="background:var(--surface2);border-radius:8px;padding:10px;font-size:12px;color:var(--text-secondary)">🚗 No cars for weeks</div>
+          <div style="background:var(--surface2);border-radius:8px;padding:10px;font-size:12px;color:var(--text-secondary)">🔒 Multiple lockboxes</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="openAddLead('d4d')" style="font-size:16px">📍 Log Property I'm Looking At Now</button>
+      <div class="card mt">
+        <div class="card-label">My D4D Properties (<span id="d4d-count">0</span>)</div>
+        <div id="d4d-list"><p class="text-sm text-muted">No properties logged yet.</p></div>
+      </div>
+    </div>
+
+    <div id="find-lists" style="display:none">
+      <div class="card-blue"><div class="card-title">📋 Motivated Seller Lists</div><p class="card-sub">The best free and low-cost sources for finding motivated sellers in South Carolina.</p></div>
+      <div class="src-item" onclick="window.open('https://propwire.com','_blank')"><div class="src-item-top"><span class="src-item-title">PropWire.com — Best Free Tool</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Filter by vacant, pre-foreclosure, tax delinquent, absentee owner, high equity — all free, all on one map.</p></div>
+      <div class="src-item" onclick="window.open('https://www.zillow.com/sc/','_blank')"><div class="src-item-top"><span class="src-item-title">Zillow SC — Days on Market 90+</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Long-listed properties = frustrated sellers. Free to search any SC city.</p></div>
+      <div class="src-item" onclick="window.open('https://southcarolina.craigslist.org/search/rea','_blank')"><div class="src-item-top"><span class="src-item-title">Craigslist SC — FSBO Listings</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Old listings with price drops = very motivated sellers. Check daily.</p></div>
+      <div class="src-item" onclick="window.open('https://www.facebook.com/marketplace/category/propertyforsale','_blank')"><div class="src-item-top"><span class="src-item-title">Facebook Marketplace SC</span><span class="src-item-arrow">→</span></div><p class="src-item-body">FSBO listings. Direct seller contact, no agents. Filter by your SC city.</p></div>
+      <div class="src-item"><div class="src-item-top"><span class="src-item-title">ListSource / ATTOM (~$50–$100)</span></div><p class="src-item-body">Paid lists — absentee owners, long-term owners, high equity. Worth it when you're ready to scale.</p></div>
+      <button class="btn btn-primary mt" onclick="openAddLead('new')">+ Add Lead from List</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ LEADS ════════════ -->
+<div class="page" id="page-leads">
+  <div class="sec-hdr">
+    <h2>My Leads</h2>
+    <button class="btn btn-primary btn-sm" onclick="openAddLead('new')">+ Add Lead</button>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="filterLeads('all',this)">All</button>
+    <button class="tab" onclick="filterLeads('new',this)">New</button>
+    <button class="tab" onclick="filterLeads('contacted',this)">Contacted</button>
+    <button class="tab" onclick="filterLeads('offer',this)">Offer</button>
+    <button class="tab" onclick="filterLeads('contract',this)">Contract</button>
+    <button class="tab" onclick="filterLeads('closed',this)">Closed</button>
+  </div>
+  <div class="pi" style="padding-top:14px" id="leads-list"></div>
+</div>
+
+<!-- ════════════ CALCULATOR ════════════ -->
+<div class="page" id="page-calc">
+  <div style="background:linear-gradient(135deg,#1B4FD8,#1338A8);padding:20px 16px 24px;color:white;">
+    <h2 style="font-size:22px;font-weight:800;letter-spacing:-0.3px;margin-bottom:4px">Deal Calculator</h2>
+    <p style="font-size:12px;opacity:.8">Know your numbers before making any offer</p>
+  </div>
+  <div class="pi" style="padding-top:14px">
+    <div class="card">
+      <div class="card-label">Property Details</div>
+      <label>Property Type</label>
+      <select id="c-type"><option>Single Family</option><option>Multi-Family</option><option>Land/Lot</option><option>Commercial</option></select>
+      <label>After Repair Value (ARV) $</label>
+      <input id="c-arv" type="number" placeholder="e.g. 200,000" oninput="calcDeal()"/>
+      <label>Estimated Repair Costs $</label>
+      <input id="c-rep" type="number" placeholder="e.g. 30,000" oninput="calcDeal()"/>
+      <label>Your Wholesale Fee $</label>
+      <input id="c-fee" type="number" placeholder="e.g. 10,000" value="10000" oninput="calcDeal()"/>
+      <label>Investor Profit Margin % <span class="text-muted text-xs">(default 70%)</span></label>
+      <input id="c-mar" type="number" placeholder="70" value="70" oninput="calcDeal()"/>
+      <label>Closing Costs % <span class="text-muted text-xs">(default 3%)</span></label>
+      <input id="c-cls" type="number" placeholder="3" value="3" oninput="calcDeal()"/>
+    </div>
+
+    <div class="card" id="calc-res" style="display:none">
+      <div class="card-label">Analysis Results</div>
+      <div class="r-row"><span class="r-label">After Repair Value</span><span class="r-val primary" id="r-arv">—</span></div>
+      <div class="r-row"><span class="r-label">Investor Max (MAO Base)</span><span class="r-val" id="r-base">—</span></div>
+      <div class="r-row"><span class="r-label">Minus Repairs</span><span class="r-val danger" id="r-rep">—</span></div>
+      <div class="r-row"><span class="r-label">Minus Your Fee</span><span class="r-val danger" id="r-fee">—</span></div>
+      <div class="r-row"><span class="r-label">Minus Closing Costs</span><span class="r-val danger" id="r-cls-v">—</span></div>
+      <div style="background:var(--primary-light);border-radius:10px;padding:14px;margin:12px 0">
+        <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:4px">MAX CASH OFFER</div>
+        <div style="font-size:28px;font-weight:800;color:var(--primary);letter-spacing:-1px" id="r-off">—</div>
+      </div>
+      <div class="r-row"><span class="r-label">Your Finder's Fee</span><span class="r-val success" id="r-myfee">—</span></div>
+      <div class="r-row"><span class="r-label">Deal Rating</span><span class="r-val" id="r-rate">—</span></div>
+      <div class="frow mt">
+        <button class="btn btn-outline btn-sm" onclick="useCalc()">Use for Offer</button>
+        <button class="btn btn-primary btn-sm" onclick="aiAnalyzeDeal()">🤖 AI Analysis</button>
+      </div>
+      <div id="ai-deal-result" style="margin-top:10px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ OUTREACH ════════════ -->
+<div class="page" id="page-outreach">
+  <div style="background:linear-gradient(135deg,#1B4FD8,#1338A8);padding:20px 16px 24px;color:white;">
+    <h2 style="font-size:22px;font-weight:800;letter-spacing:-0.3px;margin-bottom:4px">Seller Outreach</h2>
+    <p style="font-size:12px;opacity:.8">Scripts, messages and offers to convert leads to deals</p>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchOut('call',this)">Call Script</button>
+    <button class="tab" onclick="switchOut('text',this)">Text / SMS</button>
+    <button class="tab" onclick="switchOut('email',this)">Email</button>
+    <button class="tab" onclick="switchOut('offer',this)">Offer Letter</button>
+    <button class="tab" onclick="switchOut('explain',this)">How to Explain</button>
+  </div>
+  <div class="pi" style="padding-top:14px">
+
+    <div id="out-call">
+      <div class="card">
+        <div class="card-label">Cold Call Script</div>
+        <div style="background:var(--surface2);border-radius:10px;padding:14px">
+          <p class="text-sm" style="line-height:1.9;color:var(--text)">
+            <span class="fw-bold text-primary">Opening:</span><br>
+            "Hi, is this [Name]? My name is [You] — I'm a local cash home buyer. I came across your property at [Address] and wanted to reach out personally. Do you have 2 quick minutes?"<br><br>
+            <span class="fw-bold text-primary">If Yes:</span><br>
+            "I buy homes as-is, all cash — no agents, no commissions, no repairs needed on your end. We can close in as little as 7 days or on your timeline."<br><br>
+            <span class="fw-bold text-primary">Motivation Questions:</span><br>
+            "Are there repairs needed?" • "How long have you owned it?" • "What's your ideal timeline?" • "Do you have a price in mind?"<br><br>
+            <span class="fw-bold text-primary">Close:</span><br>
+            "I'd love to come take a quick look and put a written offer in your hands — no obligation. Would [day] work for a quick walkthrough?"
+          </p>
+        </div>
+        <button class="btn btn-outline mt" onclick="aiGenScript()">🤖 Generate Custom Script</button>
+        <div id="script-result" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <div id="out-text" style="display:none">
+      <div class="card"><div class="card-label">SMS Templates — Tap to Copy</div><div id="sms-tmpl"></div></div>
+      <div class="card">
+        <div class="card-label">AI Custom Text Message</div>
+        <label>Seller Name</label><input id="sn" type="text" placeholder="John"/>
+        <label>Property Address</label><input id="sa" type="text" placeholder="123 Main St"/>
+        <label>Their Situation</label><input id="ss" type="text" placeholder="e.g. inherited, behind on payments"/>
+        <button class="btn btn-primary" onclick="genSMS()">Generate Text Message</button>
+        <div id="sms-res" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <div id="out-email" style="display:none">
+      <div class="card"><div class="card-label">Email Templates</div><div id="em-tmpl"></div></div>
+      <div class="card">
+        <div class="card-label">AI Custom Email</div>
+        <label>Seller Name</label><input id="en" type="text" placeholder="John Smith"/>
+        <label>Property Address</label><input id="ea" type="text" placeholder="123 Main St"/>
+        <label>Offer Amount $</label><input id="eo" type="number" placeholder="85000"/>
+        <label>Situation</label><input id="es" type="text" placeholder="e.g. foreclosure, inherited"/>
+        <button class="btn btn-primary" onclick="genEmail()">Generate Email</button>
+        <div id="em-res" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <div id="out-offer" style="display:none">
+      <div class="card">
+        <div class="card-label">Cash Offer Letter Generator</div>
+        <label>Seller Name</label><input id="os" type="text" placeholder="John Smith"/>
+        <label>Property Address</label><input id="oa" type="text" placeholder="123 Main St, City, SC ZIP"/>
+        <label>Offer Amount $</label><input id="oo" type="number" placeholder="85000"/>
+        <label>Close Within (days)</label><input id="oc" type="number" placeholder="14" value="14"/>
+        <label>Your Name / Company</label><input id="ob" type="text" placeholder="Your Name or LLC"/>
+        <label>Special Terms</label><input id="ot" type="text" placeholder="e.g. As-Is, no inspection contingency"/>
+        <button class="btn btn-primary" onclick="genOffer()">Generate Offer Letter</button>
+        <div id="off-res" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <div id="out-explain" style="display:none">
+      <div class="card">
+        <div class="card-label">How to Explain Wholesale to Sellers</div>
+        <div style="background:var(--surface2);border-radius:10px;padding:14px">
+          <p class="text-sm" style="line-height:1.9;color:var(--text)">
+            <span class="fw-bold text-primary">What to Say:</span><br><br>
+            "I'm not an agent, so there are zero commissions to you. I'm a local investor who buys houses directly with cash.<br><br>
+            When we agree on a price, I put it in a simple contract. Sometimes I close myself, sometimes I bring in a partner investor — but either way, your price and your closing date don't change. You get exactly what we agreed on, every time.<br><br>
+            The benefit to you is speed and simplicity. No showings, no repairs, no waiting on bank approvals, no surprises. You pick a date, we close, you get paid."<br><br>
+            <span class="fw-bold" style="color:var(--warning)">If they ask "Are you going to flip it?":</span><br>
+            "I might fix it up and sell it, or keep it as a rental — but that's on my end. Your deal stays exactly the same no matter what I do with it after."
+          </p>
+        </div>
+        <button class="btn btn-outline mt" onclick="aiExplainScript()">🤖 AI Custom Explanation</button>
+        <div id="explain-res" style="margin-top:10px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ BUYERS ════════════ -->
+<div class="page" id="page-buyers">
+  <div class="sec-hdr"><h2>Cash Buyers</h2><button class="btn btn-primary btn-sm" onclick="openAddBuyer()">+ Add Buyer</button></div>
+  <div class="pi">
+    <div class="card">
+      <div class="card-label">Find Cash Buyers with $0</div>
+      <div class="src-item" onclick="window.open('https://www.facebook.com/groups/search/results/?q=south+carolina+real+estate+investors','_blank')"><div class="src-item-top"><span class="src-item-title">Facebook Groups — SC Investors</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Search "South Carolina Real Estate Investors." Post: "Looking for cash buyers in [city] for off-market deals."</p></div>
+      <div class="src-item" onclick="openSearch('REIA real estate investor association meeting near me South Carolina')"><div class="src-item-top"><span class="src-item-title">SC REIA Meetings — Free/~$20</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Everyone at a REIA meeting is a potential buyer. Best place to build your list fast.</p></div>
+      <div class="src-item" onclick="window.open('https://southcarolina.craigslist.org','_blank')"><div class="src-item-top"><span class="src-item-title">Craigslist SC — Post a Deal</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Post in Real Estate Wanted: "Off-market deals available in [city]. Cash buyers only — contact me."</p></div>
+      <div class="src-item" onclick="window.open('https://biggerpockets.com','_blank')"><div class="src-item-top"><span class="src-item-title">BiggerPockets.com — Free Network</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Connect with SC investors actively looking for deals. Post in local forums.</p></div>
+      <div class="src-item" onclick="openSearch('recent cash sales no mortgage deed records South Carolina county')"><div class="src-item-top"><span class="src-item-title">County Deed Records — Cash Sales</span><span class="src-item-arrow">→</span></div><p class="src-item-body">Pull recent deeds with no mortgage = cash buyers. Contact them directly. Free public record.</p></div>
+      <button class="btn btn-primary mt" onclick="genBuyerPitch()">🤖 Generate Buyer Pitch</button>
+      <div id="buyer-pitch" style="margin-top:10px"></div>
+    </div>
+    <div id="buyers-list"><p class="text-sm text-muted" style="padding:0 16px">No buyers added yet. Start building your list!</p></div>
+  </div>
+</div>
+
+<!-- ════════════ CONTRACTS ════════════ -->
+<div class="page" id="page-contracts">
+  <div style="background:linear-gradient(135deg,#1B4FD8,#1338A8);padding:20px 16px 24px;color:white;">
+    <h2 style="font-size:22px;font-weight:800;letter-spacing:-0.3px;margin-bottom:4px">Contracts & Docs</h2>
+    <p style="font-size:12px;opacity:.8">Generate wholesale contracts and legal documents</p>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchDoc('purchase',this)">Purchase Agreement</button>
+    <button class="tab" onclick="switchDoc('assignment',this)">Assignment</button>
+    <button class="tab" onclick="switchDoc('auth',this)">Authorization</button>
+  </div>
+  <div class="pi" style="padding-top:14px">
+    <div id="doc-purchase">
+      <div class="card">
+        <div class="card-label">Purchase & Sale Agreement</div>
+        <label>Seller Full Name</label><input id="ps" type="text" placeholder="John Smith"/>
+        <label>Buyer / Your Name</label><input id="pb" type="text" placeholder="Your Name or LLC"/>
+        <label>Property Address</label><input id="pa" type="text" placeholder="123 Main St, City, SC ZIP"/>
+        <label>Purchase Price $</label><input id="pp" type="number" placeholder="85000"/>
+        <label>Earnest Money Deposit $</label><input id="pe" type="number" placeholder="500" value="500"/>
+        <label>Close Within (days)</label><input id="pc2" type="number" placeholder="30" value="30"/>
+        <label>State</label><input id="pst" type="text" placeholder="South Carolina" value="South Carolina"/>
+        <button class="btn btn-primary" onclick="genPurchase()">Generate Contract</button>
+      </div>
+      <div id="purchase-out"></div>
+    </div>
+    <div id="doc-assignment" style="display:none">
+      <div class="card">
+        <div class="card-label">Assignment of Contract</div>
+        <label>Assignor (You)</label><input id="asy" type="text" placeholder="Your Name or LLC"/>
+        <label>Assignee (Cash Buyer)</label><input id="asb" type="text" placeholder="Investor Name or LLC"/>
+        <label>Seller Name</label><input id="ass" type="text" placeholder="John Smith"/>
+        <label>Property Address</label><input id="asad" type="text" placeholder="123 Main St, City, SC"/>
+        <label>Original Contract Price $</label><input id="asop" type="number" placeholder="85000"/>
+        <label>Assignment Fee $</label><input id="asf" type="number" placeholder="10000"/>
+        <label>New Total Price $</label><input id="asnp" type="number" placeholder="95000"/>
+        <button class="btn btn-primary" onclick="genAssign()">Generate Assignment</button>
+      </div>
+      <div id="assign-out"></div>
+    </div>
+    <div id="doc-auth" style="display:none">
+      <div class="card">
+        <div class="card-label">Authorization to Market Property</div>
+        <label>Property Owner</label><input id="auo" type="text" placeholder="John Smith"/>
+        <label>Property Address</label><input id="aua" type="text" placeholder="123 Main St, City, SC"/>
+        <label>Your Name</label><input id="auy" type="text" placeholder="Your Name or LLC"/>
+        <label>Duration (days)</label><input id="aud" type="number" placeholder="30" value="30"/>
+        <button class="btn btn-primary" onclick="genAuth()">Generate Authorization</button>
+      </div>
+      <div id="auth-out"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ GUIDE ════════════ -->
+<div class="page" id="page-guide">
+  <div style="background:linear-gradient(135deg,#1B4FD8,#1338A8);padding:20px 16px 24px;color:white;">
+    <h2 style="font-size:22px;font-weight:800;letter-spacing:-0.3px;margin-bottom:4px">Wholesaling Guide</h2>
+    <p style="font-size:12px;opacity:.8">Everything you need to close your first deal</p>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchGuide('steps',this)">7 Steps</button>
+    <button class="tab" onclick="switchGuide('legal',this)">Legal</button>
+    <button class="tab" onclick="switchGuide('money',this)">No Money</button>
+    <button class="tab" onclick="switchGuide('faq',this)">FAQ</button>
+  </div>
+  <div class="pi" style="padding-top:14px">
+
+    <div id="guide-steps">
+      <div class="card">
+        <div class="card-label">Your Step-by-Step Roadmap</div>
+        <div class="step-item"><div class="step-num">1</div><div class="step-body"><h3>Find a Motivated Seller</h3><p>Use the SC Search or Find tabs. The seller must NEED to sell, not just want to. Look for vacant, pre-FC, tax delinquent, or D4D leads.</p></div></div>
+        <div class="step-item"><div class="step-num">2</div><div class="step-body"><h3>Analyze the Deal</h3><p>Use the Calculator. Find ARV (what it's worth fixed up), estimate repairs, calculate your MAO. Your offer must leave room for the investor's profit AND your fee.</p></div></div>
+        <div class="step-item"><div class="step-num">3</div><div class="step-body"><h3>Make the Offer</h3><p>Present your cash offer confidently using the Offer Letter generator. You're solving their problem. Most will say no — that's normal. Keep going.</p></div></div>
+        <div class="step-item"><div class="step-num">4</div><div class="step-body"><h3>Get It Under Contract</h3><p>Seller accepts? Sign the Purchase & Sale Agreement. Include an assignment clause. Small EMD ($100–$500 to start is fine).</p></div></div>
+        <div class="step-item"><div class="step-num">5</div><div class="step-body"><h3>Find Your Cash Buyer</h3><p>Go to the Buyers tab. Present the deal: address, ARV, your price, repairs needed. Serious investors respond within 24–48 hours.</p></div></div>
+        <div class="step-item"><div class="step-num">6</div><div class="step-body"><h3>Assign the Contract</h3><p>Use the Assignment of Contract doc. Your buyer pays your assignment fee plus the original contract price. Everyone heads to closing.</p></div></div>
+        <div class="step-item"><div class="step-num">7</div><div class="step-body"><h3>Close & Collect Your Fee</h3><p>The title company handles everything. You collect your finder's fee — typically $5,000–$20,000 per deal — at closing.</p></div></div>
+        <button class="btn btn-outline mt" onclick="aiGuideQ()">🤖 Ask AI a Question</button>
+        <div id="guide-q-res" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <div id="guide-legal" style="display:none">
+      <div class="card">
+        <div class="card-label">Staying Legal Without a License</div>
+        <div class="box-ok"><div class="box-ok-title">✅ What You CAN Do</div><p class="text-sm" style="line-height:1.8;color:var(--text-secondary)">✅ Buy and sell real estate you own (your contract is an equitable interest)<br>✅ Market and sell your CONTRACT — not the property itself<br>✅ Collect an assignment fee for transferring your contract<br>✅ Work with a title company for a proper closing<br>✅ Wholesale in SC without a license if done correctly</p></div>
+        <div class="box-warn"><div class="box-warn-title">⚠️ What to Avoid</div><p class="text-sm" style="line-height:1.8;color:var(--text-secondary)">❌ Don't advertise the property — you're selling your CONTRACT<br>❌ Don't act as an agent or represent the seller publicly<br>❌ Don't collect any fee before closing<br>❌ Always verify current SC real estate laws — they can change</p></div>
+        <div class="box-ok"><div class="box-ok-title">✅ How to Protect Yourself</div><p class="text-sm" style="line-height:1.8;color:var(--text-secondary)">✅ Always use written contracts with an assignment clause<br>✅ Work with a reputable SC title company or real estate attorney<br>✅ Form an LLC (~$110 in SC — cheap protection)<br>✅ Always disclose you're an investor, not an agent</p></div>
+        <div class="box-danger"><div class="box-danger-title">⚠️ Disclaimer</div><p class="text-sm" style="line-height:1.6;color:var(--text-secondary)">This app provides educational information only — not legal advice. SC real estate laws vary. Always consult a licensed SC real estate attorney before conducting wholesale transactions.</p></div>
+      </div>
+    </div>
+
+    <div id="guide-money" style="display:none">
+      <div class="card">
+        <div class="card-label">How to Wholesale with $0</div>
+        <div class="step-item"><div class="step-num">1</div><div class="step-body"><h3>Use Free Lead Sources</h3><p>PropWire, Zillow, Facebook, Craigslist, D4D, SC County Records — 100% free. You don't need paid lists to start.</p></div></div>
+        <div class="step-item"><div class="step-num">2</div><div class="step-body"><h3>Keep Your EMD Small</h3><p>Negotiate a $100–$500 EMD. Or use an inspection contingency — if you can't find a buyer, back out and get your deposit returned.</p></div></div>
+        <div class="step-item"><div class="step-num">3</div><div class="step-body"><h3>Free Contracts</h3><p>This app generates purchase agreements, assignments, and authorization letters for free. No attorney fee needed to start.</p></div></div>
+        <div class="step-item"><div class="step-num">4</div><div class="step-body"><h3>Market for Free</h3><p>Text, call, Facebook groups, Craigslist, door hangers printed at the library. Your hustle is your marketing budget.</p></div></div>
+        <div class="step-item"><div class="step-num">5</div><div class="step-body"><h3>Build Your Buyer List First</h3><p>Go to REIA meetings and Facebook groups NOW before you have a deal. When you find a deal, you'll already know who to call.</p></div></div>
+        <div class="card-blue mt"><p class="text-sm fw-bold text-primary" style="margin-bottom:4px">Real Talk</p><p class="text-sm" style="line-height:1.7;color:var(--text-secondary)">Your first deal may take 30–90 days. That's normal. Most successful wholesalers did 10–20 failed attempts first. The system works — consistency is everything.</p></div>
+      </div>
+    </div>
+
+    <div id="guide-faq" style="display:none">
+      <div class="card">
+        <div class="card-label">Common Questions</div>
+        <div id="faq-list"></div>
+        <div class="divider"></div>
+        <label>Ask AI Any Question</label>
+        <input id="faq-q" type="text" placeholder="e.g. How do I find the ARV for a property?"/>
+        <button class="btn btn-primary" onclick="askFAQ()">Get Answer</button>
+        <div id="faq-res" style="margin-top:10px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ PIPELINE BOARD ════════════ -->
+<div class="page" id="page-pipeline">
+  <div style="background:linear-gradient(135deg,#1B4FD8,#1338A8);padding:20px 16px 24px;color:white;">
+    <h2 style="font-size:22px;font-weight:800;letter-spacing:-0.3px;margin-bottom:4px">Deal Pipeline</h2>
+    <p style="font-size:12px;opacity:.8">Track every lead from first contact to closing</p>
+  </div>
+  <!-- PROFIT SUMMARY -->
+  <div style="background:white;border-bottom:1px solid var(--border);padding:14px 16px;">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+      <div style="text-align:center"><div style="font-size:18px;font-weight:800;color:var(--text)" id="pipe-new">0</div><div style="font-size:9px;font-weight:700;color:var(--text-muted);text-transform:uppercase">New</div></div>
+      <div style="text-align:center"><div style="font-size:18px;font-weight:800;color:var(--warning)" id="pipe-contacted">0</div><div style="font-size:9px;font-weight:700;color:var(--text-muted);text-transform:uppercase">Contacted</div></div>
+      <div style="text-align:center"><div style="font-size:18px;font-weight:800;color:var(--primary)" id="pipe-offer">0</div><div style="font-size:9px;font-weight:700;color:var(--text-muted);text-transform:uppercase">Offer Out</div></div>
+      <div style="text-align:center"><div style="font-size:18px;font-weight:800;color:var(--success)" id="pipe-contract">0</div><div style="font-size:9px;font-weight:700;color:var(--text-muted);text-transform:uppercase">Contract</div></div>
+    </div>
+  </div>
+  <!-- PROJECTED EARNINGS -->
+  <div class="pi" style="padding-top:14px">
+    <div class="card-blue">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div><div class="card-label">Projected Pipeline Value</div><div style="font-size:26px;font-weight:800;color:var(--primary)" id="pipe-projected">$0</div><div class="text-xs text-muted mt" id="pipe-projected-sub">Based on active leads with ARV data</div></div>
+        <div style="font-size:36px">💰</div>
+      </div>
+    </div>
+    <!-- OVERDUE FOLLOWUPS -->
+    <div id="overdue-section" style="display:none">
+      <div class="card-warning">
+        <div class="card-label" style="color:var(--warning)">⏰ Follow-Ups Due</div>
+        <div id="overdue-list"></div>
+      </div>
+    </div>
+    <!-- PIPELINE STAGES -->
+    <div id="pipeline-board"></div>
+  </div>
+</div>
+
+<!-- ════════════ TOOLS ════════════ -->
+<div class="page" id="page-tools">
+  <div style="background:linear-gradient(135deg,#1B4FD8,#0EA5E9);padding:20px 16px 24px;color:white;">
+    <h2 style="font-size:22px;font-weight:800;letter-spacing:-0.3px;margin-bottom:4px">AI Tools</h2>
+    <p style="font-size:12px;opacity:.8">Smart tools to close deals faster</p>
+  </div>
+  <div class="tabs" id="tools-tabs">
+    <button class="tab active" onclick="switchTools('import',this)">Quick Import</button>
+    <button class="tab" onclick="switchTools('comps',this)">Comp Estimator</button>
+    <button class="tab" onclick="switchTools('score',this)">Deal Scorer</button>
+    <button class="tab" onclick="switchTools('objections',this)">Objections</button>
+    <button class="tab" onclick="switchTools('scripts',this)">My Scripts</button>
+    <button class="tab" onclick="switchTools('backup',this)">Backup</button>
+  </div>
+  <div class="pi" style="padding-top:14px">
+
+    <!-- QUICK IMPORT -->
+    <div id="tool-import">
+      <div class="card-blue">
+        <div class="card-title">📋 Quick Property Import</div>
+        <p class="card-sub">Found a property on Zillow, Craigslist, or Facebook? Paste any info below — address, price, description, anything — and AI will extract all key details and create a complete lead automatically.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Paste Property Info</div>
+        <textarea id="import-text" style="min-height:120px" placeholder="Paste anything here — a Zillow listing description, Craigslist ad, address + details, your own notes, a text from a seller... AI handles the rest."></textarea>
+        <button class="btn btn-primary" onclick="runQuickImport()">🤖 AI Import & Create Lead</button>
+        <div id="import-result" style="margin-top:12px"></div>
+      </div>
+    </div>
+
+    <!-- COMP ESTIMATOR -->
+    <div id="tool-comps" style="display:none">
+      <div class="card-blue">
+        <div class="card-title">📊 SC ARV Estimator</div>
+        <p class="card-sub">Enter property details and your SC city — AI estimates a realistic ARV range based on South Carolina market knowledge, then suggests your max offer and expected fee.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Property Details</div>
+        <label>SC City / Neighborhood</label>
+        <select id="comp-city">
+          <option value="Columbia">Columbia</option>
+          <option value="Charleston">Charleston</option>
+          <option value="Greenville">Greenville</option>
+          <option value="Spartanburg">Spartanburg</option>
+          <option value="Myrtle Beach">Myrtle Beach</option>
+          <option value="Rock Hill">Rock Hill</option>
+          <option value="Florence">Florence</option>
+          <option value="Sumter">Sumter</option>
+        </select>
+        <label>Specific Neighborhood / Zip (optional)</label>
+        <input id="comp-neighborhood" type="text" placeholder="e.g. North Charleston, Five Points, 29203"/>
+        <label>Bedrooms</label>
+        <select id="comp-beds"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5+</option></select>
+        <label>Bathrooms</label>
+        <select id="comp-baths"><option>1</option><option selected>2</option><option>3</option><option>4+</option></select>
+        <label>Square Footage (approx)</label>
+        <input id="comp-sqft" type="number" placeholder="e.g. 1400"/>
+        <label>Property Condition</label>
+        <select id="comp-condition">
+          <option value="heavy">Heavy rehab needed (gutted)</option>
+          <option value="moderate">Moderate repairs (cosmetic + systems)</option>
+          <option value="light">Light cosmetic only</option>
+          <option value="good">Good condition / move-in ready</option>
+        </select>
+        <label>Property Type</label>
+        <select id="comp-type"><option>Single Family</option><option>Multi-Family</option><option>Townhouse</option><option>Land</option></select>
+        <label>Additional Notes (optional)</label>
+        <input id="comp-notes" type="text" placeholder="e.g. corner lot, near downtown, flood zone"/>
+        <button class="btn btn-primary" onclick="runCompEstimator()">🤖 Estimate ARV & Deal Numbers</button>
+        <div id="comp-result" style="margin-top:12px"></div>
+      </div>
+    </div>
+
+    <!-- DEAL SCORER -->
+    <div id="tool-score" style="display:none">
+      <div class="card-blue">
+        <div class="card-title">🧠 AI Deal Scorer</div>
+        <p class="card-sub">Select any lead and AI will score it 1–10, tell you exactly what's strong, what's risky, and whether to pursue it or walk away.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Select Lead to Score</div>
+        <select id="score-lead-select"></select>
+        <label>Any extra info AI should consider</label>
+        <input id="score-extra" type="text" placeholder="e.g. seller is very motivated, needs to close in 2 weeks"/>
+        <button class="btn btn-primary" onclick="runDealScorer()">🤖 Score This Deal</button>
+        <div id="score-result" style="margin-top:12px"></div>
+      </div>
+      <div class="card">
+        <div class="card-label">All Lead Scores</div>
+        <div id="all-scores"><p class="text-sm text-muted">Score a lead above to see results here.</p></div>
+      </div>
+    </div>
+
+    <!-- OBJECTION HANDLER -->
+    <div id="tool-objections" style="display:none">
+      <div class="card-blue">
+        <div class="card-title">💬 Seller Objection Handler</div>
+        <p class="card-sub">Tap any common objection to get a proven response you can use immediately — or type your own and let AI craft a custom reply.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Common Seller Objections</div>
+        <div id="objection-list"></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Custom Objection</div>
+        <label>What did the seller say?</label>
+        <input id="custom-obj" type="text" placeholder='e.g. "I already have an agent" or "I need full price"'/>
+        <button class="btn btn-primary" onclick="handleCustomObj()">🤖 Get AI Response</button>
+        <div id="custom-obj-result" style="margin-top:10px"></div>
+      </div>
+    </div>
+
+    <!-- SCRIPTS LIBRARY -->
+    <div id="tool-scripts" style="display:none">
+      <div class="card-blue">
+        <div class="card-title">📚 My Scripts Library</div>
+        <p class="card-sub">Save your best AI-generated scripts, texts, emails, and pitches here so you can reuse them anytime without regenerating.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Save New Script</div>
+        <label>Script Name</label>
+        <input id="script-name" type="text" placeholder="e.g. My Best Cold Call Opener"/>
+        <label>Script / Message</label>
+        <textarea id="script-body" placeholder="Paste your script or message here..."></textarea>
+        <button class="btn btn-primary" onclick="saveScript()">Save to Library</button>
+      </div>
+      <div id="scripts-library"></div>
+    </div>
+
+    <!-- BACKUP / EXPORT -->
+    <div id="tool-backup" style="display:none">
+      <div class="card-blue">
+        <div class="card-title">🗂️ Backup & Restore</div>
+        <p class="card-sub">Export all your leads, buyers, and data to a file. Import it back anytime — even on a different device.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Export All Data</div>
+        <p class="text-sm text-secondary" style="margin-bottom:12px;line-height:1.6">Downloads a backup file with all your leads, buyers, deals, scripts, and settings.</p>
+        <button class="btn btn-primary" onclick="exportData()">⬇️ Download Backup File</button>
+      </div>
+      <div class="card">
+        <div class="card-label">Import / Restore Data</div>
+        <p class="text-sm text-secondary" style="margin-bottom:10px;line-height:1.6">Select a previously exported backup file to restore your data.</p>
+        <input type="file" id="import-file" accept=".json" style="margin-bottom:10px" onchange="importData(this)"/>
+        <div id="import-status"></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Data Summary</div>
+        <div class="r-row"><span class="r-label">Total Leads</span><span class="r-val" id="bk-leads">0</span></div>
+        <div class="r-row"><span class="r-label">Total Buyers</span><span class="r-val" id="bk-buyers">0</span></div>
+        <div class="r-row"><span class="r-label">Deals Closed</span><span class="r-val" id="bk-deals">0</span></div>
+        <div class="r-row"><span class="r-label">Fees Earned</span><span class="r-val success" id="bk-fees">$0</span></div>
+        <div class="r-row"><span class="r-label">Saved Scripts</span><span class="r-val" id="bk-scripts">0</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── NAV ── -->
+<nav id="nav">
+  <button class="nb active" onclick="navTo('home',this)"><span class="ic">🏠</span>HOME</button>
+  <button class="nb" onclick="navTo('search',this)"><span class="ic">🏡</span>SC</button>
+  <button class="nb" onclick="navTo('find',this)"><span class="ic">🔍</span>FIND</button>
+  <button class="nb" onclick="navTo('leads',this)"><span class="ic">📍</span>LEADS</button>
+  <button class="nb" onclick="navTo('pipeline',this)"><span class="ic">📊</span>PIPELINE</button>
+  <button class="nb" onclick="navTo('calc',this)"><span class="ic">🧮</span>CALC</button>
+  <button class="nb" onclick="navTo('outreach',this)"><span class="ic">📞</span>REACH</button>
+  <button class="nb" onclick="navTo('buyers',this)"><span class="ic">💼</span>BUYERS</button>
+  <button class="nb" onclick="navTo('tools',this)"><span class="ic">🛠️</span>TOOLS</button>
+  <button class="nb" onclick="navTo('contracts',this)"><span class="ic">📄</span>DOCS</button>
+  <button class="nb" onclick="navTo('guide',this)"><span class="ic">📚</span>GUIDE</button>
+</nav>
+
+<!-- ── MODAL ── -->
+<div id="mo" onclick="closeMo(event)">
+  <div id="mb"><div class="mh"></div><div id="mc"></div></div>
+</div>
+
+<script>
+// ── STATE ──
+let S={apiKey:'',leads:[],buyers:[],deals:0,fees:0,activity:[],scripts:[]};
+function save(){try{localStorage.setItem('dfp3',JSON.stringify(S));}catch(e){}}
+function load(){
+  try{
+    const d=localStorage.getItem('dfp3');
+    if(d){S=JSON.parse(d);if(!S.scripts)S.scripts=[];}
+    else{const old=localStorage.getItem('dfp2');if(old){S=JSON.parse(old);S.scripts=[];}}
+  }catch(e){}
+}
+load();
+
+// ── BOOT ──
+renderStats(); renderLeads('all'); renderBuyers(); renderActivity();
+renderSMSTmpl(); renderEmailTmpl(); renderD4D(); renderFAQ(); checkApiBtn();
+renderScriptsLibrary(); renderBackupSummary();
+
+function checkApiBtn(){
+  const b=document.getElementById('api-btn');
+  if(S.apiKey){b.textContent='✅ AI Active';b.classList.add('active');}
+  else{b.textContent='⚙ AI Setup';b.classList.remove('active');}
+}
+
+// ── NAV ──
+const PAGES=['home','search','find','leads','pipeline','calc','outreach','buyers','tools','contracts','guide'];
+function navTo(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  else{const idx=PAGES.indexOf(id);if(idx>=0)document.querySelectorAll('.nb')[idx].classList.add('active');}
+  if(id==='leads')renderLeads(curFilter);
+  if(id==='buyers')renderBuyers();
+  if(id==='find')renderD4D();
+  if(id==='pipeline'){renderPipeline();renderOverdue();}
+  if(id==='tools'){renderScoreLeadSelect();renderBackupSummary();}
+}
+
+// ── STATS ──
+function renderStats(){
+  document.getElementById('st-leads').textContent=S.leads.length;
+  document.getElementById('st-deals').textContent=S.deals;
+  const f=S.fees||0;
+  document.getElementById('st-fees').textContent=f>=1000?'$'+(f/1000).toFixed(1)+'K':'$'+f;
+}
+
+// ── ACTIVITY ──
+function logActivity(msg){
+  S.activity.unshift({msg,time:new Date().toLocaleDateString()});
+  if(S.activity.length>30)S.activity.pop();
+  save(); renderActivity();
+}
+function renderActivity(){
+  const el=document.getElementById('activity-list');
+  if(!S.activity.length){el.innerHTML='<p class="text-sm text-muted">No activity yet.</p>';return;}
+  el.innerHTML=S.activity.slice(0,6).map(a=>`
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--border)">
+      <span class="text-sm" style="color:var(--text)">${a.msg}</span>
+      <span class="text-xs text-muted" style="white-space:nowrap;margin-left:8px">${a.time}</span>
+    </div>`).join('');
+}
+
+// ── API MODAL ──
+function openApiModal(){
+  setMo(`<h2>AI Setup</h2>
+    <p class="text-sm text-secondary" style="margin-bottom:14px;line-height:1.6">Add your Anthropic API key to unlock AI-powered deal analysis, custom outreach, and market insights.</p>
+    <div class="card-blue" style="margin-bottom:14px">
+      <div class="card-label">How to Get Your Free Key</div>
+      <p class="text-sm" style="line-height:1.8;color:var(--text-secondary)">1. Go to <strong>platform.anthropic.com</strong><br>2. Sign up → API Keys → Create Key<br>3. Copy the key (starts with sk-ant-)<br>4. Paste it below and tap Save</p>
+    </div>
+    <label>API Key</label>
+    <input id="ak-in" type="password" placeholder="sk-ant-..." value="${S.apiKey}"/>
+    <button class="btn btn-primary" onclick="saveKey()">Save & Activate AI</button>
+    <button class="btn btn-ghost" style="margin-top:8px" onclick="closeMo()">Cancel</button>
+  `);
+}
+function saveKey(){S.apiKey=document.getElementById('ak-in').value.trim();save();checkApiBtn();closeMo();}
+
+// ── AI ──
+async function callAI(prompt,sys='You are an expert real estate wholesaling coach. Be practical, direct, and concise.'){
+  if(!S.apiKey)return '⚠️ Please add your AI key first — tap "AI Setup" in the top right.';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':S.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:[{role:'user',content:prompt}]})
+    });
+    const d=await r.json();
+    if(d.error)return '❌ '+d.error.message;
+    return d.content[0].text;
+  }catch(e){return '❌ Error: '+e.message;}
+}
+async function sendAI(){
+  const inp=document.getElementById('ai-in');
+  const msg=inp.value.trim(); if(!msg)return;
+  inp.value='';
+  addAIMsg(msg,'user');
+  const ctx=`Leads: ${S.leads.length}, Deals: ${S.deals}, Fees earned: $${S.fees}, Market: South Carolina`;
+  const r=await callAI(`Context: ${ctx}\n\nQuestion: ${msg}`);
+  addAIMsg(r,'ai');
+}
+function addAIMsg(t,role){
+  const el=document.getElementById('ai-msgs');
+  el.innerHTML+=`<div class="a-msg ${role}">${role==='ai'?'<div class="a-lbl">AI Assistant</div>':''}${esc(t).replace(/\n/g,'<br>')}</div>`;
+  el.scrollTop=el.scrollHeight;
+}
+
+// ── LEADS ──
+let curFilter='all';
+function filterLeads(f,el){
+  curFilter=f;
+  document.querySelectorAll('#page-leads .tabs .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active'); renderLeads(f);
+}
+function renderLeads(f){
+  const el=document.getElementById('leads-list');
+  let leads=S.leads;
+  if(f!=='all')leads=leads.filter(l=>l.status===f);
+  if(!leads.length){el.innerHTML='<p class="text-sm text-muted">No leads here yet.</p>';return;}
+  el.innerHTML=leads.map(l=>{
+    const i=S.leads.indexOf(l);
+    const badgeClass='badge-'+(l.source||l.status||'new');
+    return`<div class="lead-item" onclick="openLead(${i})">
+      <div style="flex:1;min-width:0">
+        <div class="lead-name">${l.name||'Unknown Seller'}</div>
+        <div class="lead-addr">${l.address||'No address entered'}</div>
+        <div class="lead-meta">${l.phone?'📱 '+l.phone:''} ${l.arv?'· ARV $'+Number(l.arv).toLocaleString():''}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+        <span class="badge ${badgeClass}">${(l.status||'new').toUpperCase()}</span>
+        ${l.source&&l.source!==l.status?`<span class="badge badge-d4d" style="font-size:9px">${l.source.toUpperCase()}</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openAddLead(src){
+  setMo(`<h2>Add Lead</h2>
+    <label>Seller Name</label><input id="nl-n" type="text" placeholder="John Smith"/>
+    <label>Phone</label><input id="nl-p" type="tel" placeholder="(555) 000-0000"/>
+    <label>Email</label><input id="nl-e" type="email" placeholder="john@email.com"/>
+    <label>Property Address</label><input id="nl-a" type="text" placeholder="123 Main St, City, SC ZIP"/>
+    <label>Property Type</label>
+    <select id="nl-t"><option>Single Family</option><option>Multi-Family</option><option>Land/Lot</option><option>Commercial</option></select>
+    <label>Lead Source</label>
+    <select id="nl-src">
+      <option value="new">General</option>
+      <option value="vacant" ${src==='vacant'?'selected':''}>Vacant / Abandoned</option>
+      <option value="prefc" ${src==='prefc'?'selected':''}>Pre-Foreclosure</option>
+      <option value="tax" ${src==='tax'?'selected':''}>Tax Delinquent</option>
+      <option value="d4d" ${src==='d4d'?'selected':''}>Driving for Dollars</option>
+    </select>
+    <label>Estimated ARV $</label><input id="nl-arv" type="number" placeholder="200000"/>
+    <label>Seller Asking Price $</label><input id="nl-ask" type="number" placeholder="120000"/>
+    <label>Estimated Repairs $</label><input id="nl-rep" type="number" placeholder="30000"/>
+    <label>Notes / Motivation</label><textarea id="nl-notes" placeholder="Why are they selling? Timeline? Situation?"></textarea>
+    <label>Status</label>
+    <select id="nl-st"><option value="new">New</option><option value="contacted">Contacted</option><option value="offer">Offer Sent</option><option value="contract">Under Contract</option><option value="closed">Closed</option></select>
+    <label>Follow-Up Date (optional)</label><input id="nl-fu" type="date"/>
+    <button class="btn btn-primary" onclick="saveLead()">Save Lead</button>
+    <button class="btn btn-ghost" style="margin-top:8px" onclick="closeMo()">Cancel</button>
+  `);
+}
+function saveLead(){
+  const lead={name:v('nl-n'),phone:v('nl-p'),email:v('nl-e'),address:v('nl-a'),type:v('nl-t'),
+    source:v('nl-src'),arv:v('nl-arv'),asking:v('nl-ask'),repairs:v('nl-rep'),
+    notes:v('nl-notes'),status:v('nl-st'),followUp:v('nl-fu'),date:new Date().toLocaleDateString()};
+  S.leads.unshift(lead); save(); renderLeads(curFilter); renderStats(); renderD4D();
+  logActivity(`New lead: ${lead.name||lead.address||'Unknown'}`);
+  closeMo();
+}
+function openLead(i){
+  const l=S.leads[i];
+  const arv=parseFloat(l.arv)||0,rep=parseFloat(l.repairs)||0;
+  const mao=Math.max(0,arv*.7-rep-10000);
+  setMo(`<h2>${l.name||'Lead Details'}</h2>
+    <p class="text-xs text-muted">${l.date}${l.source?' · '+l.source.toUpperCase():''}</p>
+    <div class="divider"></div>
+    <div class="r-row"><span class="r-label">Address</span><span class="r-val text-sm">${l.address||'—'}</span></div>
+    <div class="r-row"><span class="r-label">Phone</span><span class="r-val"><a href="tel:${l.phone}" style="color:var(--primary);font-weight:700">${l.phone||'—'}</a></span></div>
+    <div class="r-row"><span class="r-label">Email</span><span class="r-val text-sm">${l.email||'—'}</span></div>
+    <div class="r-row"><span class="r-label">Type</span><span class="r-val">${l.type||'—'}</span></div>
+    <div class="r-row"><span class="r-label">ARV</span><span class="r-val primary">$${Number(l.arv||0).toLocaleString()}</span></div>
+    <div class="r-row"><span class="r-label">Repairs</span><span class="r-val danger">$${Number(l.repairs||0).toLocaleString()}</span></div>
+    <div class="r-row"><span class="r-label">Asking Price</span><span class="r-val">$${Number(l.asking||0).toLocaleString()}</span></div>
+    ${arv>0?`<div style="background:var(--primary-light);border-radius:9px;padding:11px;margin:10px 0;display:flex;justify-content:space-between;align-items:center"><span class="text-sm fw-bold text-primary">Suggested Max Offer</span><span style="font-size:18px;font-weight:800;color:var(--primary)">$${mao.toLocaleString()}</span></div>`:''}
+    <p class="text-sm text-secondary" style="margin:10px 0">Notes: ${l.notes||'None'}</p>
+    <div class="divider"></div>
+    <label>Update Status</label>
+    <select id="ed-st" onchange="updateStatus(${i},this.value)">
+      ${['new','contacted','offer','contract','closed'].map(s=>`<option value="${s}"${l.status===s?' selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}
+    </select>
+    <div class="frow mt">
+      <button class="btn btn-primary btn-sm" onclick="callNum('${l.phone}')">📞 Call</button>
+      <button class="btn btn-outline btn-sm" onclick="textNum('${l.phone}')">💬 Text</button>
+      <button class="btn btn-outline btn-sm" onclick="emailNum('${l.email}')">📧 Email</button>
+    </div>
+    <button class="btn btn-danger" style="margin-top:10px" onclick="delLead(${i})">Delete Lead</button>
+    <button class="btn btn-ghost" style="margin-top:8px" onclick="closeMo()">Close</button>
+  `);
+}
+function updateStatus(i,st){
+  if(st==='closed'){S.deals++;S.fees+=10000;logActivity(`🎉 Closed: ${S.leads[i].name||S.leads[i].address}`);}
+  S.leads[i].status=st; save(); renderStats(); renderLeads(curFilter);
+}
+function delLead(i){S.leads.splice(i,1);save();renderLeads(curFilter);renderStats();renderD4D();closeMo();}
+function callNum(p){if(p)window.location.href='tel:'+p;}
+function textNum(p){if(p)window.location.href='sms:'+p;}
+function emailNum(e){if(e)window.location.href='mailto:'+e;}
+
+// ── D4D ──
+function renderD4D(){
+  const d4d=S.leads.filter(l=>l.source==='d4d');
+  const el=document.getElementById('d4d-count');
+  if(el)el.textContent=d4d.length;
+  const list=document.getElementById('d4d-list');
+  if(!list)return;
+  if(!d4d.length){list.innerHTML='<p class="text-sm text-muted">No D4D properties yet. Start driving!</p>';return;}
+  list.innerHTML=d4d.map(l=>{
+    const i=S.leads.indexOf(l);
+    return`<div class="lead-item" onclick="openLead(${i})">
+      <div><div class="lead-name">${l.address||'Unknown Address'}</div><div class="lead-addr">${l.notes||'No notes'}</div><div class="lead-meta">${l.date}</div></div>
+      <span class="badge badge-d4d">${(l.status||'new').toUpperCase()}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── CALCULATOR ──
+function calcDeal(){
+  const arv=parseFloat(document.getElementById('c-arv').value)||0;
+  const rep=parseFloat(document.getElementById('c-rep').value)||0;
+  const fee=parseFloat(document.getElementById('c-fee').value)||10000;
+  const mar=parseFloat(document.getElementById('c-mar').value)||70;
+  const cls=parseFloat(document.getElementById('c-cls').value)||3;
+  if(!arv){document.getElementById('calc-res').style.display='none';return;}
+  const base=arv*(mar/100);
+  const closing=arv*(cls/100);
+  const offer=base-rep-fee-closing;
+  const spread=offer/arv;
+  const rate=offer<=0?'❌ No Deal':spread>.4?'🔥 Hot Deal':spread>.25?'✅ Good Deal':spread>.1?'⚠️ Thin Deal':'❌ No Deal';
+  document.getElementById('calc-res').style.display='block';
+  document.getElementById('r-arv').textContent='$'+arv.toLocaleString();
+  document.getElementById('r-base').textContent='$'+base.toLocaleString();
+  document.getElementById('r-rep').textContent='-$'+rep.toLocaleString();
+  document.getElementById('r-fee').textContent='-$'+fee.toLocaleString();
+  document.getElementById('r-cls-v').textContent='-$'+closing.toLocaleString();
+  document.getElementById('r-off').textContent='$'+Math.max(0,offer).toLocaleString();
+  document.getElementById('r-myfee').textContent='$'+fee.toLocaleString();
+  document.getElementById('r-rate').textContent=rate;
+}
+function useCalc(){
+  const off=document.getElementById('r-off').textContent;
+  document.getElementById('oo').value=off.replace(/[$,]/g,'');
+  navTo('outreach'); switchOut('offer',null);
+}
+async function aiAnalyzeDeal(){
+  const el=document.getElementById('ai-deal-result');
+  el.innerHTML='<p class="text-sm text-muted">Analyzing your deal...</p>';
+  const arv=document.getElementById('c-arv').value;
+  const rep=document.getElementById('c-rep').value;
+  const offer=document.getElementById('r-off').textContent;
+  const rate=document.getElementById('r-rate').textContent;
+  const r=await callAI(`Analyze this SC wholesale deal: ARV $${arv}, Repairs $${rep}, Max Cash Offer ${offer}, Rating: ${rate}. Give me 3 sentences: is this worth pursuing, what to watch for, and a negotiation tip.`);
+  el.innerHTML=`<div class="card-blue"><div class="card-label">AI Analysis</div><p class="text-sm" style="line-height:1.7;color:var(--text-secondary)">${esc(r).replace(/\n/g,'<br>')}</p></div>`;
+}
+
+// ── OUTREACH ──
+function switchOut(tab,el){
+  ['call','text','email','offer','explain'].forEach(t=>document.getElementById('out-'+t).style.display='none');
+  document.getElementById('out-'+tab).style.display='block';
+  if(el){document.querySelectorAll('#page-outreach .tabs .tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');}
+}
+function renderSMSTmpl(){
+  const tmpl=[
+    {l:'Initial Contact',m:`Hi [Name], my name is [You] — I'm a local cash buyer. Would you consider a fast cash offer for [Address]? No fees, as-is, quick close.`},
+    {l:'Follow Up',m:`Hey [Name], just following up on [Address]. Still open to a cash offer? We can close on your schedule.`},
+    {l:'Motivated Seller',m:`Hi [Name], I buy homes as-is, all cash, and can close in 7 days. Would you be open to a conversation about [Address]?`},
+    {l:'Offer Ready',m:`Hi [Name], I ran the numbers on [Address] and I'm ready to put a written cash offer in your hands. Available this week?`},
+  ];
+  const el=document.getElementById('sms-tmpl');
+  if(!el)return;
+  el.innerHTML=tmpl.map(t=>`
+    <div style="border:1px solid var(--border);border-radius:9px;padding:12px;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span class="text-sm fw-bold">${t.l}</span>
+        <button class="btn btn-outline btn-sm" onclick="copyTxt(this,'${t.m.replace(/'/g,"\\'")}')">Copy</button>
+      </div>
+      <p class="text-sm text-secondary" style="line-height:1.6">${t.m}</p>
+    </div>`).join('');
+}
+function renderEmailTmpl(){
+  const tmpl=[
+    {l:'Cold Outreach',s:'Quick Question About Your Property',b:`Hi [Name],\n\nMy name is [You] and I'm a local real estate investor in South Carolina. I came across your property at [Address] and wanted to reach out personally.\n\nI buy homes in any condition — all cash, no agent fees, no commissions, no repairs needed. We close on your timeline.\n\nWould you be open to a quick 5-minute call?\n\nBest,\n[Your Name]`},
+    {l:'Follow Up',s:'Following Up on Your Property',b:`Hi [Name],\n\nJust following up on my earlier message about [Address].\n\nNo pressure at all — just want you to know the offer still stands whenever you're ready. All cash, as-is, quick close.\n\n[Your Name]`},
+  ];
+  const el=document.getElementById('em-tmpl');
+  if(!el)return;
+  el.innerHTML=tmpl.map(t=>`
+    <div style="border:1px solid var(--border);border-radius:9px;padding:12px;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span class="text-sm fw-bold">${t.l}</span>
+        <button class="btn btn-outline btn-sm" onclick="copyTxt(this,'Subject: ${t.s.replace(/'/g,"\\'")}\\n\\n${t.b.replace(/'/g,"\\'").replace(/\n/g,'\\n')}')">Copy</button>
+      </div>
+      <p class="text-xs text-muted">Subject: ${t.s}</p>
+    </div>`).join('');
+}
+async function genSMS(){
+  const el=document.getElementById('sms-res');el.innerHTML='<p class="text-sm text-muted">Generating...</p>';
+  const r=await callAI(`Write a natural, human SMS (under 160 chars) to a motivated seller named ${v('sn')||'[Name]'} about their property at ${v('sa')||'[Address]'} in South Carolina. ${v('ss')?'Situation: '+v('ss'):''} Goal: get them to reply. No salesy language.`);
+  el.innerHTML=`<div style="border:1px solid var(--border);border-radius:9px;padding:12px"><p class="text-sm" style="line-height:1.7">${esc(r)}</p><button class="btn btn-outline btn-sm mt" onclick="copyTxt(this,'${r.replace(/'/g,"\\'")}')">Copy</button></div>`;
+}
+async function genEmail(){
+  const el=document.getElementById('em-res');el.innerHTML='<p class="text-sm text-muted">Generating...</p>';
+  const r=await callAI(`Write a warm professional email to a motivated seller named ${v('en')||'[Name]'} about their property at ${v('ea')||'[Address]'} in SC. ${v('eo')?'Cash offer: $'+v('eo'):''} ${v('es')?'Situation: '+v('es'):''} Keep it genuine and brief.`);
+  el.innerHTML=`<div style="border:1px solid var(--border);border-radius:9px;padding:12px"><pre class="text-sm" style="line-height:1.7;white-space:pre-wrap;color:var(--text)">${esc(r)}</pre><button class="btn btn-outline btn-sm mt" onclick="copyTxt(this,'${r.replace(/'/g,"\\'")}')">Copy</button></div>`;
+}
+function genOffer(){
+  const seller=v('os'),addr=v('oa'),amt=v('oo'),close=v('oc')||14,buyer=v('ob'),terms=v('ot');
+  const today=new Date().toLocaleDateString();
+  const txt=`CASH OFFER TO PURCHASE REAL PROPERTY\n\nDate: ${today}\n\nTo: ${seller||'[Seller Name]'}\nProperty: ${addr||'[Property Address]'}\n\nOFFER PRICE: $${Number(amt||0).toLocaleString()}\n\nTERMS:\n• All cash — no financing contingency\n• Property purchased AS-IS, current condition\n• Closing within ${close} days of acceptance\n• No agent commissions or fees to seller\n${terms?'• '+terms:''}\n• Buyer pays standard closing costs\n\nThis offer is valid for 72 hours from the date above.\n\nSincerely,\n${buyer||'[Your Name]'}\nReal Estate Investor | South Carolina\n\n\nSeller Signature: _______________________\nDate: ___________________________\n\nBuyer Signature: _______________________\nDate: ___________________________\n\n⚠️ Educational template only. Consult a licensed SC real estate attorney before use.`;
+  document.getElementById('off-res').innerHTML=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="card-label">Offer Letter</span><button class="btn btn-outline btn-sm" onclick="copyTxt(this,document.querySelector('#off-res pre').textContent)">Copy</button></div><pre class="contract">${esc(txt)}</pre></div>`;
+}
+async function aiGenScript(){
+  const el=document.getElementById('script-result');el.innerHTML='<p class="text-sm text-muted">Generating...</p>';
+  const r=await callAI(`Write a personalized cold call opener and 3 follow-up questions for contacting a motivated seller in South Carolina. Make it sound natural — not salesy or robotic.`);
+  el.innerHTML=`<div style="border:1px solid var(--border);border-radius:9px;padding:13px"><p class="text-sm" style="line-height:1.8">${esc(r).replace(/\n/g,'<br>')}</p><button class="btn btn-outline btn-sm mt" onclick="copyTxt(this,'${r.replace(/'/g,"\\'")}')">Copy</button></div>`;
+}
+async function aiExplainScript(){
+  const el=document.getElementById('explain-res');el.innerHTML='<p class="text-sm text-muted">Generating...</p>';
+  const r=await callAI(`Write a simple 100-word explanation of wholesale real estate I can say out loud to a skeptical South Carolina homeowner. Make it honest, clear, and reassuring. Focus on how they benefit.`);
+  el.innerHTML=`<div style="border:1px solid var(--border);border-radius:9px;padding:13px"><p class="text-sm" style="line-height:1.8">${esc(r).replace(/\n/g,'<br>')}</p><button class="btn btn-outline btn-sm mt" onclick="copyTxt(this,'${r.replace(/'/g,"\\'")}')">Copy</button></div>`;
+}
+
+// ── BUYERS ──
+function openAddBuyer(){
+  setMo(`<h2>Add Cash Buyer</h2>
+    <label>Name / Company</label><input id="nb-n" type="text" placeholder="Investor Name or LLC"/>
+    <label>Phone</label><input id="nb-p" type="tel" placeholder="(555) 000-0000"/>
+    <label>Email</label><input id="nb-e" type="email" placeholder="investor@email.com"/>
+    <label>Buy Box (what they buy)</label><input id="nb-b" type="text" placeholder="SFR under $150K, Columbia SC"/>
+    <label>Property Type Preference</label>
+    <select id="nb-t"><option>Single Family</option><option>Multi-Family</option><option>Land</option><option>Any</option></select>
+    <label>Notes</label><textarea id="nb-no" placeholder="How you met, preferences, budget..."></textarea>
+    <button class="btn btn-primary" onclick="saveBuyer()">Save Buyer</button>
+    <button class="btn btn-ghost" style="margin-top:8px" onclick="closeMo()">Cancel</button>
+  `);
+}
+function saveBuyer(){
+  S.buyers.unshift({name:v('nb-n'),phone:v('nb-p'),email:v('nb-e'),box:v('nb-b'),type:v('nb-t'),notes:v('nb-no'),date:new Date().toLocaleDateString()});
+  save(); renderBuyers(); logActivity(`New buyer: ${S.buyers[0].name}`); closeMo();
+}
+function renderBuyers(){
+  const el=document.getElementById('buyers-list');
+  if(!S.buyers.length){el.innerHTML='<p class="text-sm text-muted" style="padding:0 16px">No buyers yet. Start building your list!</p>';return;}
+  el.innerHTML='<div style="padding:0 16px">'+S.buyers.map((b,i)=>`
+    <div class="lead-item" onclick="openBuyer(${i})">
+      <div><div class="lead-name">${b.name||'Unknown Buyer'}</div><div class="lead-addr">${b.box||b.type||'No buy box set'}</div><div class="lead-meta">${b.phone||''}</div></div>
+      <span class="badge badge-buyer">BUYER</span>
+    </div>`).join('')+'</div>';
+}
+function openBuyer(i){
+  const b=S.buyers[i];
+  setMo(`<h2>${b.name||'Buyer'}</h2>
+    <div class="r-row"><span class="r-label">Phone</span><span class="r-val"><a href="tel:${b.phone}" style="color:var(--primary);font-weight:700">${b.phone||'—'}</a></span></div>
+    <div class="r-row"><span class="r-label">Email</span><span class="r-val text-sm">${b.email||'—'}</span></div>
+    <div class="r-row"><span class="r-label">Buy Box</span><span class="r-val text-sm">${b.box||'—'}</span></div>
+    <div class="r-row"><span class="r-label">Property Type</span><span class="r-val">${b.type||'—'}</span></div>
+    <p class="text-sm text-secondary" style="margin-top:10px">Notes: ${b.notes||'None'}</p>
+    <div class="frow mt">
+      <button class="btn btn-primary btn-sm" onclick="callNum('${b.phone}')">📞 Call</button>
+      <button class="btn btn-outline btn-sm" onclick="textNum('${b.phone}')">💬 Text</button>
+    </div>
+    <button class="btn btn-danger" style="margin-top:10px" onclick="delBuyer(${i})">Delete Buyer</button>
+    <button class="btn btn-ghost" style="margin-top:8px" onclick="closeMo()">Close</button>
+  `);
+}
+function delBuyer(i){S.buyers.splice(i,1);save();renderBuyers();closeMo();}
+async function genBuyerPitch(){
+  const el=document.getElementById('buyer-pitch');el.innerHTML='<p class="text-sm text-muted">Generating...</p>';
+  const r=await callAI(`Write a short, professional deal pitch (under 150 words) to present a wholesale deal to a cash buyer investor in South Carolina. Include: property under contract, discounted price, as-is, quick close, strong equity spread. Make it compelling.`);
+  el.innerHTML=`<div style="border:1px solid var(--border);border-radius:9px;padding:13px"><p class="text-sm" style="line-height:1.7">${esc(r).replace(/\n/g,'<br>')}</p><button class="btn btn-outline btn-sm mt" onclick="copyTxt(this,'${r.replace(/'/g,"\\'")}')">Copy</button></div>`;
+}
+
+// ── CONTRACTS ──
+function switchDoc(tab,el){
+  ['purchase','assignment','auth'].forEach(t=>document.getElementById('doc-'+t).style.display='none');
+  document.getElementById('doc-'+tab).style.display='block';
+  document.querySelectorAll('#page-contracts .tabs .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+function genPurchase(){
+  const seller=v('ps'),buyer=v('pb'),addr=v('pa'),price=v('pp'),emd=v('pe'),close=v('pc2')||30,st=v('pst')||'South Carolina';
+  const today=new Date().toLocaleDateString();
+  const closeDate=new Date(Date.now()+parseInt(close)*86400000).toLocaleDateString();
+  const txt=`REAL ESTATE PURCHASE AND SALE AGREEMENT\n\nDate: ${today}\n\nSELLER: ${seller||'[Seller Name]'}\nBUYER: ${buyer||'[Buyer Name]'}\nPROPERTY: ${addr||'[Property Address]'}\nSTATE: ${st}\n\nPURCHASE PRICE: $${Number(price||0).toLocaleString()}\nEARNEST MONEY DEPOSIT: $${Number(emd||0).toLocaleString()} (due within 3 business days)\nCLOSING DATE: On or before ${closeDate}\n\nTERMS:\n1. Property sold AS-IS in its current condition.\n2. Buyer waives inspection contingency.\n3. All-cash transaction. No financing contingency.\n4. Seller provides clear, marketable title.\n5. Buyer reserves the right to assign this contract.\n6. Time is of the essence.\n\nSELLER:\nSignature: _______________________\nPrint: ${seller||'________________________'}\nDate: ___________________________\n\nBUYER:\nSignature: _______________________\nPrint: ${buyer||'________________________'}\nDate: ___________________________\n\n⚠️ DISCLAIMER: Educational template only. Consult a licensed real estate attorney in ${st} before use.`;
+  document.getElementById('purchase-out').innerHTML=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="card-label">Purchase Agreement</span><button class="btn btn-outline btn-sm" onclick="copyTxt(this,document.querySelector('#purchase-out pre').textContent)">Copy All</button></div><pre class="contract">${esc(txt)}</pre></div>`;
+}
+function genAssign(){
+  const today=new Date().toLocaleDateString();
+  const txt=`ASSIGNMENT OF REAL ESTATE PURCHASE CONTRACT\n\nDate: ${today}\n\nASSIGNOR (You): ${v('asy')||'[Your Name]'}\nASSIGNEE (Cash Buyer): ${v('asb')||'[Investor Name]'}\nSELLER: ${v('ass')||'[Seller Name]'}\nPROPERTY: ${v('asad')||'[Property Address]'}\n\nORIGINAL CONTRACT PRICE: $${Number(v('asop')||0).toLocaleString()}\nASSIGNMENT FEE: $${Number(v('asf')||0).toLocaleString()}\nNEW TOTAL PRICE: $${Number(v('asnp')||0).toLocaleString()}\n\nAssignor hereby assigns all rights and interest in the Purchase Contract to Assignee. Assignee agrees to fulfill all Buyer obligations and pay the Assignment Fee at closing.\n\nASSIGNOR:\nSignature: _______________________\nDate: ___________________________\n\nASSIGNEE:\nSignature: _______________________\nDate: ___________________________\n\n⚠️ Consult a SC real estate attorney before use.`;
+  document.getElementById('assign-out').innerHTML=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="card-label">Assignment Contract</span><button class="btn btn-outline btn-sm" onclick="copyTxt(this,document.querySelector('#assign-out pre').textContent)">Copy All</button></div><pre class="contract">${esc(txt)}</pre></div>`;
+}
+function genAuth(){
+  const today=new Date().toLocaleDateString();
+  const days=parseInt(v('aud'))||30;
+  const exp=new Date(Date.now()+days*86400000).toLocaleDateString();
+  const txt=`AUTHORIZATION TO MARKET PROPERTY\n\nDate: ${today}  ·  Expires: ${exp}\n\nPROPERTY OWNER: ${v('auo')||'[Owner Name]'}\nPROPERTY ADDRESS: ${v('aua')||'[Property Address]'}\nAUTHORIZED PARTY: ${v('auy')||'[Your Name]'}\nDURATION: ${days} days\n\nI, ${v('auo')||'[Owner]'}, authorize ${v('auy')||'[Authorized Party]'} to market the above property to potential buyers for ${days} days. This includes showing the property, advertising it, and presenting offers. This is not an exclusive listing agreement.\n\nOWNER:\nSignature: _______________________\nDate: ___________________________\n\nAUTHORIZED PARTY:\nSignature: _______________________\nDate: ___________________________\n\n⚠️ Consult a licensed real estate attorney. Laws vary by state.`;
+  document.getElementById('auth-out').innerHTML=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="card-label">Authorization Letter</span><button class="btn btn-outline btn-sm" onclick="copyTxt(this,document.querySelector('#auth-out pre').textContent)">Copy All</button></div><pre class="contract">${esc(txt)}</pre></div>`;
+}
+
+// ── GUIDE ──
+function switchGuide(tab,el){
+  ['steps','legal','money','faq'].forEach(t=>document.getElementById('guide-'+t).style.display='none');
+  document.getElementById('guide-'+tab).style.display='block';
+  document.querySelectorAll('#page-guide .tabs .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+function renderFAQ(){
+  const el=document.getElementById('faq-list');if(!el)return;
+  const faqs=[
+    {q:'Do I need a real estate license to wholesale in SC?',a:'In most cases, no. As long as you\'re selling your contract (equitable interest), not acting as an agent. Always verify with a SC real estate attorney.'},
+    {q:'How much money do I need to start?',a:'Technically $0. You need a small EMD ($100–$500) and some marketing costs. Most wholesalers start with just a phone and hustle.'},
+    {q:'How long until my first deal?',a:'Most beginners take 30–90 days. Some take longer. Consistency is everything — don\'t quit after a few rejections.'},
+    {q:'What is ARV?',a:'After Repair Value — what the property is worth FULLY renovated. This is the foundation of every wholesale deal calculation.'},
+    {q:'How do I find comps for ARV?',a:'Search recently sold homes (last 3–6 months) within 0.5 miles of the property on Zillow or Redfin. Similar size, beds, baths. Average the prices.'},
+    {q:'What\'s a typical wholesale fee in SC?',a:'$5,000–$20,000 per deal. Some deals are $2K, some $50K+. Depends on the market and equity spread.'},
+  ];
+  el.innerHTML=faqs.map(f=>`
+    <div style="padding:10px 0;border-bottom:1px solid var(--border)">
+      <p class="text-sm fw-bold text-primary">${f.q}</p>
+      <p class="text-sm text-secondary" style="margin-top:4px;line-height:1.6">${f.a}</p>
+    </div>`).join('');
+}
+async function askFAQ(){
+  const el=document.getElementById('faq-res');
+  const q=v('faq-q'); if(!q)return;
+  el.innerHTML='<p class="text-sm text-muted">Thinking...</p>';
+  const r=await callAI(`A beginner SC real estate wholesaler asks: "${q}". Answer in 2–3 sentences. Practical and direct.`);
+  el.innerHTML=`<div class="card-blue"><div class="card-label">Answer</div><p class="text-sm" style="line-height:1.7;color:var(--text-secondary)">${esc(r).replace(/\n/g,'<br>')}</p></div>`;
+}
+async function aiGuideQ(){
+  setMo(`<h2>Ask AI</h2>
+    <label>Your Question</label>
+    <textarea id="gq-in" placeholder="e.g. How do I approach a seller who is behind on payments?"></textarea>
+    <button class="btn btn-primary" onclick="submitGuideQ()">Get Answer</button>
+    <div id="gq-res" style="margin-top:10px"></div>
+  `);
+}
+async function submitGuideQ(){
+  const el=document.getElementById('gq-res');
+  el.innerHTML='<p class="text-sm text-muted">Thinking...</p>';
+  const r=await callAI(`SC wholesaler asks: "${v('gq-in')}". Give a practical, direct answer with action steps.`);
+  el.innerHTML=`<div class="card-blue"><div class="card-label">Answer</div><p class="text-sm" style="line-height:1.7;color:var(--text-secondary)">${esc(r).replace(/\n/g,'<br>')}</p></div>`;
+}
+
+// ── SC SEARCH ──
+const SC_COUNTIES=[
+  {name:'Richland (Columbia)',url:'https://www.richlandcountysc.gov/Departments/Assessor',note:'Assessor records, tax info, GIS map'},
+  {name:'Charleston',url:'https://www.charlestoncounty.org/departments/assessor/',note:'Property records, GIS, tax search'},
+  {name:'Greenville',url:'https://www.greenvillecounty.org/apsd/realestate/SearchEntry.aspx',note:'Online real estate property search'},
+  {name:'Spartanburg',url:'https://www.spartanburgcounty.org/218/Assessor',note:'Property records and assessed values'},
+  {name:'Horry (Myrtle Beach)',url:'https://www.horrycounty.org/Departments/Assessor',note:'Property search & tax records'},
+  {name:'York (Rock Hill)',url:'https://www.yorkcountygov.com/164/Assessor',note:'Real estate assessments & records'},
+  {name:'Florence',url:'https://www.florenceco.org/offices/assessor/',note:'Property records & tax info'},
+  {name:'Sumter',url:'https://www.sumtercountysc.org/departments/assessor/',note:'Assessor property search'},
+  {name:'Lexington',url:'https://www.lex-co.sc.gov/departments/assessor',note:'Property & tax records'},
+  {name:'Anderson',url:'https://www.andersoncountysc.org/departments/assessor',note:'Property search & GIS'},
+];
+
+const SC_SOURCES={
+  vacant:{label:'Vacant / Abandoned',sources:[
+    {t:'PropWire — Vacant Filter',d:'Filter by Vacant for any SC city. Free.',url:'https://propwire.com'},
+    {t:'USPS Vacancy via ListSource',d:'USPS tracks vacant addresses. ListSource sells lists ~$50.',url:'https://listsource.com'},
+    {t:'County Assessor — No Homestead',d:'Properties without homestead exemption = likely vacant. Free public records.',url:null},
+  ]},
+  prefc:{label:'Pre-Foreclosure',sources:[
+    {t:'Foreclosure.com — SC',d:'Free limited pre-foreclosure search for SC.',url:'https://www.foreclosure.com/listing/search.html?st=SC'},
+    {t:'SC Courts — Lis Pendens',d:'Public court filings for foreclosure actions. Free.',url:'https://www.sccourts.org/caseSearch/'},
+    {t:'PropWire Pre-FC Filter',d:'Filter pre-foreclosure for any SC city. Free.',url:'https://propwire.com'},
+  ]},
+  tax:{label:'Tax Delinquent',sources:[
+    {t:'SC DOR — Tax Info',d:'SC Department of Revenue property tax information.',url:'https://www.sctax.org'},
+    {t:'Richland County Tax Sale',d:'Annual tax sale list — published before each sale.',url:'https://www.richlandcountysc.gov/Departments/Treasurer/Tax-Sale'},
+    {t:'Charleston County Tax Sale',d:'Published each fall. Highly motivated sellers.',url:'https://www.charlestoncounty.org/departments/treasurer/tax-sale.php'},
+    {t:'PropWire Tax Delinquent Filter',d:'Filter tax delinquent for any SC city. Free.',url:'https://propwire.com'},
+  ]},
+  equity:{label:'High Equity / Long-Term Owner',sources:[
+    {t:'PropWire — Absentee + High Equity',d:'Filter both together. These owners often have huge equity and are open to selling.',url:'https://propwire.com'},
+    {t:'ListSource — Long-Term Owners',d:'Build a targeted list of SC owners with 10+ years. ~$50–$100.',url:'https://listsource.com'},
+  ]},
+  fsbo:{label:'For Sale by Owner (FSBO)',sources:[
+    {t:'Zillow SC — FSBO',d:'Filter by owner listings for any SC city.',url:'https://www.zillow.com/sc/fsbo/'},
+    {t:'Craigslist SC — By Owner',d:'Old listings with price drops = motivated sellers.',url:'https://southcarolina.craigslist.org/search/rea'},
+    {t:'Facebook Marketplace SC',d:'Direct seller contact, no agents. Filter by your city.',url:'https://www.facebook.com/marketplace/category/propertyforsale'},
+    {t:'FSBO.com — South Carolina',d:'Dedicated FSBO site with SC listings.',url:'https://www.fsbo.com/search/SC'},
+  ]},
+  reo:{label:'Bank Owned / REO',sources:[
+    {t:'HUD Homes — SC',d:'Government foreclosures. Discounted, investor-eligible.',url:'https://www.hudhomestore.gov/Listing/PropertySearchResult.aspx?sState=SC'},
+    {t:'Fannie Mae HomePath — SC',d:'Fannie Mae REO properties, investor purchases allowed.',url:'https://www.homepath.com/'},
+    {t:'Auction.com — SC',d:'Online auction for bank-owned SC properties.',url:'https://www.auction.com/residential/?state=SC'},
+    {t:'RealtyTrac Bank Owned SC',d:'Bank owned REO across SC counties.',url:'https://www.realtytrac.com/'},
+  ]},
+  all:{label:'All Distressed Types',sources:[
+    {t:'PropWire — Full SC Search',d:'#1 free tool. All distressed types, any SC city.',url:'https://propwire.com'},
+    {t:'Foreclosure.com — SC',d:'Foreclosure, pre-FC, REO across SC. Free limited access.',url:'https://www.foreclosure.com/listing/search.html?st=SC'},
+    {t:'Zillow SC — All Listings',d:'Filter price reduced + 60+ days on market.',url:'https://www.zillow.com/sc/'},
+    {t:'SC Courts Public Search',d:'Lis pendens, foreclosure filings statewide.',url:'https://www.sccourts.org/caseSearch/'},
+    {t:'HUD Homes SC',d:'Government-owned foreclosures. Best discounts.',url:'https://www.hudhomestore.gov/Listing/PropertySearchResult.aspx?sState=SC'},
+  ]},
+};
+
+const CITY_INFO={
+  Columbia:{note:'Richland County. Strong rental demand near USC. Look for older homes near downtown, Shandon, and North Columbia.',url:'https://www.richlandcountysc.gov'},
+  Charleston:{note:'Hot market — best deals in North Charleston, Summerville, Goose Creek, and Ladson. High buyer demand.',url:'https://www.charlestoncounty.org'},
+  Greenville:{note:'Fast-growing Upstate SC. Taylors, Mauldin, Simpsonville, and Greer have strong investor activity.',url:'https://www.greenvillecounty.org'},
+  Spartanburg:{note:'Affordable market with strong rental numbers. Duncan, Inman, and Boiling Springs are solid wholesale targets.',url:'https://www.spartanburgcounty.org'},
+  'Myrtle Beach':{note:'Horry County. Seasonal market but strong investor demand year-round. Conway and Loris offer better price points.',url:'https://www.horrycounty.org'},
+  'Rock Hill':{note:'York County. Close to Charlotte — many Charlotte investors buy here. Excellent buyer pool and fast-growing market.',url:'https://www.yorkcountygov.com'},
+  Florence:{note:'Florence County. Affordable market with less wholesaler competition. Good entry-level opportunity.',url:'https://www.florenceco.org'},
+  Sumter:{note:'Military town (Shaw AFB). Stable, consistent rental demand. Underserved wholesale market — less competition.',url:'https://www.sumtercountysc.org'},
+};
+
+function renderSCCounties(){
+  const el=document.getElementById('sc-counties');if(!el)return;
+  el.innerHTML=SC_COUNTIES.map(c=>`
+    <div class="src-item" onclick="window.open('${c.url}','_blank')">
+      <div class="src-item-top"><span class="src-item-title">${c.name} County</span><span class="src-item-arrow">→</span></div>
+      <p class="src-item-body">${c.note}</p>
+    </div>`).join('');
+}
+
+function runSCSearch(){
+  const city=document.getElementById('sc-city').value;
+  const ltype=document.getElementById('sc-ltype').value;
+  const ptype=document.getElementById('sc-ptype').value;
+  const data=SC_SOURCES[ltype]||SC_SOURCES.all;
+  const cityInfo=city!=='all'?CITY_INFO[city]:null;
+
+  const resultsEl=document.getElementById('sc-results');
+  const titleEl=document.getElementById('sc-results-title');
+  const listEl=document.getElementById('sc-results-list');
+  const intelEl=document.getElementById('sc-market-intel');
+  const intelLabel=document.getElementById('sc-intel-label');
+  const intelBody=document.getElementById('sc-intel-body');
+  const intelLink=document.getElementById('sc-intel-link');
+
+  titleEl.textContent=`${data.label} — ${city==='all'?'All of South Carolina':city}${ptype!=='any'?' · '+ptype:''}`;
+
+  if(cityInfo){
+    intelLabel.textContent=city+' Market Intel';
+    intelBody.textContent=cityInfo.note;
+    intelLink.textContent='→ Open '+city+' County Records';
+    intelLink.href=cityInfo.url;
+    intelEl.style.display='block';
+  } else {
+    intelEl.style.display='none';
+  }
+
+  listEl.innerHTML=data.sources.map(s=>`
+    <div class="src-item" ${s.url?`onclick="window.open('${s.url}','_blank')"`:''}> 
+      <div class="src-item-top">
+        <span class="src-item-title">${s.t}</span>
+        ${s.url?'<span class="src-item-arrow">→</span>':''}
+      </div>
+      <p class="src-item-body">${s.d}</p>
+    </div>`).join('');
+
+  listEl.innerHTML+=`<button class="btn btn-primary" style="margin-top:6px" onclick="openAddLead('new')">+ Add Lead I Found</button>`;
+  resultsEl.style.display='block';
+  resultsEl.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+async function aiSCSearch(){
+  const city=document.getElementById('sc-city').value;
+  const ltype=document.getElementById('sc-ltype').value;
+  const ptype=document.getElementById('sc-ptype').value;
+  const el=document.getElementById('sc-ai-result');
+  el.innerHTML='<div class="card"><p class="text-sm text-muted">Analyzing SC market...</p></div>';
+  const ltypeLabel={vacant:'vacant/abandoned',prefc:'pre-foreclosure',tax:'tax delinquent',equity:'high equity long-term owners',fsbo:'FSBO',reo:'bank owned REO',all:'all distressed types'}[ltype]||ltype;
+  const r=await callAI(
+    `I am wholesaling real estate in ${city==='all'?'South Carolina':city+', SC'}. I want to find ${ltypeLabel}${ptype!=='any'?' '+ptype:''} properties.\n\nGive me:\n1. Top 3 free ways to find these leads in ${city==='all'?'SC':city} right now\n2. A script or approach for contacting these sellers\n3. What a realistic deal looks like here (price range, typical fee)\n4. One mistake beginners make with this lead type\n\nBe specific and practical.`,
+    'You are an expert real estate wholesaler who knows the South Carolina market deeply — Columbia, Charleston, Greenville, Myrtle Beach, Rock Hill, Spartanburg, Florence, and Sumter. Give specific, actionable advice.'
+  );
+  el.innerHTML=`<div class="card"><div class="card-label">AI Market Analysis — ${city==='all'?'South Carolina':city}</div><p class="text-sm" style="line-height:1.8;color:var(--text-secondary);white-space:pre-wrap">${esc(r)}</p><button class="btn btn-outline btn-sm mt" onclick="copyTxt(this,\`${r.replace(/`/g,'\\`')}\`)">Copy</button></div>`;
+}
+
+// call now that data is defined
+renderSCCounties();
+
+
+// ══════════════════════════════════════
+// ── PIPELINE BOARD ──
+// ══════════════════════════════════════
+function renderPipeline(){
+  const stages=['new','contacted','offer','contract','closed'];
+  const labels={new:'New Leads',contacted:'Contacted',offer:'Offer Sent',contract:'Under Contract',closed:'Closed'};
+  const colors={new:'var(--text-muted)',contacted:'var(--warning)',offer:'var(--primary)',contract:'var(--success)',closed:'var(--success)'};
+
+  // counts
+  stages.forEach(s=>{
+    const el=document.getElementById('pipe-'+s);
+    if(el)el.textContent=S.leads.filter(l=>l.status===s).length;
+  });
+
+  // projected value
+  const active=S.leads.filter(l=>l.status!=='closed');
+  const projected=active.reduce((sum,l)=>{
+    const arv=parseFloat(l.arv)||0;
+    if(!arv)return sum+10000;
+    return sum+Math.max(0,arv*.7-(parseFloat(l.repairs)||0)-10000);
+  },0);
+  const el=document.getElementById('pipe-projected');
+  if(el)el.textContent='$'+Math.round(projected).toLocaleString();
+  const sub=document.getElementById('pipe-projected-sub');
+  if(sub)sub.textContent=`Across ${active.length} active lead${active.length!==1?'s':''}`;
+
+  // board
+  const board=document.getElementById('pipeline-board');
+  if(!board)return;
+  board.innerHTML=stages.map(s=>{
+    const leads=S.leads.filter(l=>l.status===s);
+    if(!leads.length&&s==='closed')return'';
+    return`<div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:${colors[s]}">${labels[s]}</span>
+        <span style="background:var(--surface2);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:700;color:var(--text-muted)">${leads.length}</span>
+      </div>
+      ${leads.length?leads.map(l=>{
+        const i=S.leads.indexOf(l);
+        const arv=parseFloat(l.arv)||0;
+        const fee=arv?Math.max(0,arv*.7-(parseFloat(l.repairs)||0)-10000):null;
+        const overdue=l.followUp&&new Date(l.followUp)<new Date();
+        return`<div class="lead-item" onclick="openLead(${i})" style="${overdue?'border-color:var(--warning);':''} margin-bottom:8px">
+          <div style="flex:1;min-width:0">
+            <div class="lead-name">${l.name||'Unknown'}</div>
+            <div class="lead-addr">${l.address||'No address'}</div>
+            <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
+              ${fee?`<span style="font-size:11px;font-weight:700;color:var(--success)">Est. fee: $${Math.round(fee).toLocaleString()}</span>`:''}
+              ${l.followUp?`<span style="font-size:10px;color:${overdue?'var(--danger)':'var(--text-muted)'};">${overdue?'⏰ OVERDUE':'📅 '} ${new Date(l.followUp).toLocaleDateString()}</span>`:''}
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+            <span class="badge badge-${s}">${s.toUpperCase()}</span>
+            <div style="display:flex;gap:4px">
+              ${l.phone?`<button style="background:var(--primary-light);border:none;border-radius:6px;padding:4px 8px;font-size:11px;color:var(--primary);font-weight:700;cursor:pointer" onclick="event.stopPropagation();callNum('${l.phone}')">Call</button>`:''}
+            </div>
+          </div>
+        </div>`;
+      }).join(''):`<div style="background:var(--surface2);border-radius:10px;padding:12px;text-align:center;font-size:12px;color:var(--text-muted)">No leads at this stage</div>`}
+    </div>`;
+  }).join('');
+}
+
+function renderOverdue(){
+  const today=new Date();today.setHours(0,0,0,0);
+  const overdue=S.leads.filter(l=>l.followUp&&new Date(l.followUp)<today&&l.status!=='closed');
+  const sec=document.getElementById('overdue-section');
+  const list=document.getElementById('overdue-list');
+  if(!sec||!list)return;
+  if(!overdue.length){sec.style.display='none';return;}
+  sec.style.display='block';
+  list.innerHTML=overdue.map(l=>{
+    const i=S.leads.indexOf(l);
+    return`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(217,119,6,.2)">
+      <div><div class="text-sm fw-bold">${l.name||'Unknown'}</div><div class="text-xs text-muted">${l.address||''}</div></div>
+      <button class="btn btn-outline btn-sm" style="color:var(--warning);border-color:var(--warning)" onclick="openLead(${i})">View</button>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════
+// ── QUICK IMPORT ──
+// ══════════════════════════════════════
+async function runQuickImport(){
+  const text=document.getElementById('import-text').value.trim();
+  if(!text){alert('Please paste some property info first.');return;}
+  const el=document.getElementById('import-result');
+  el.innerHTML='<p class="text-sm text-muted">🤖 AI analyzing property info...</p>';
+  const r=await callAI(
+    `Extract real estate property details from this text and return ONLY a JSON object with these exact fields (use null for any missing field):
+{"name":"seller name or null","phone":"phone or null","email":"email or null","address":"full address","city":"SC city","type":"Single Family or Multi-Family or Land or Commercial","arv_estimate":"estimated ARV in dollars as number or null","asking":"asking price as number or null","repairs_estimate":"estimated repairs as number or null","condition":"brief condition description","notes":"key details about motivation or situation","source":"where this lead came from"}
+
+Text to analyze:
+${text}
+
+Return ONLY the JSON, no other text.`,
+    'You are a real estate data extraction expert. Extract property details accurately and return only valid JSON.'
+  );
+  try{
+    const clean=r.replace(/```json|```/g,'').trim();
+    const data=JSON.parse(clean);
+    const arv=parseFloat(data.arv_estimate)||0;
+    const rep=parseFloat(data.repairs_estimate)||0;
+    const fee=arv?Math.max(0,arv*.7-rep-10000):null;
+    el.innerHTML=`
+      <div class="card">
+        <div class="card-label">✅ AI Extracted — Review & Import</div>
+        <div class="r-row"><span class="r-label">Address</span><span class="r-val text-sm">${data.address||'—'}</span></div>
+        <div class="r-row"><span class="r-label">Seller</span><span class="r-val">${data.name||'—'}</span></div>
+        <div class="r-row"><span class="r-label">Phone</span><span class="r-val">${data.phone||'—'}</span></div>
+        <div class="r-row"><span class="r-label">Type</span><span class="r-val">${data.type||'—'}</span></div>
+        <div class="r-row"><span class="r-label">Asking Price</span><span class="r-val">${data.asking?'$'+Number(data.asking).toLocaleString():'—'}</span></div>
+        <div class="r-row"><span class="r-label">Est. ARV</span><span class="r-val primary">${arv?'$'+arv.toLocaleString():'—'}</span></div>
+        <div class="r-row"><span class="r-label">Est. Repairs</span><span class="r-val danger">${rep?'$'+rep.toLocaleString():'—'}</span></div>
+        ${fee?`<div style="background:var(--success-light);border-radius:9px;padding:11px;margin:10px 0;display:flex;justify-content:space-between"><span class="text-sm fw-bold" style="color:var(--success)">Estimated Your Fee</span><span style="font-size:18px;font-weight:800;color:var(--success)">$${Math.round(fee).toLocaleString()}</span></div>`:''}
+        <p class="text-sm text-secondary" style="margin:8px 0;line-height:1.6">Notes: ${data.notes||'None'}</p>
+        <button class="btn btn-primary" onclick="importAsLead(${encodeImportData(data)})">✅ Save as Lead</button>
+        <button class="btn btn-ghost" style="margin-top:8px" onclick="document.getElementById('import-text').value='';document.getElementById('import-result').innerHTML=''">Clear</button>
+      </div>`;
+  }catch(e){
+    el.innerHTML=`<div class="card-warning"><div class="card-label">Extraction Notes</div><p class="text-sm" style="line-height:1.7;white-space:pre-wrap">${esc(r)}</p><button class="btn btn-outline mt" onclick="manualImport()">Enter Manually Instead</button></div>`;
+  }
+}
+
+function encodeImportData(data){
+  return "'"+JSON.stringify(data).replace(/'/g,"\\'")+"'";
+}
+function importAsLead(dataStr){
+  let data;
+  try{data=typeof dataStr==='string'?JSON.parse(dataStr):dataStr;}catch(e){data={};}
+  const lead={
+    name:data.name||'',phone:data.phone||'',email:data.email||'',
+    address:data.address||'',type:data.type||'Single Family',
+    source:'new',arv:data.arv_estimate||'',asking:data.asking||'',
+    repairs:data.repairs_estimate||'',notes:data.notes||data.condition||'',
+    status:'new',date:new Date().toLocaleDateString(),followUp:''
+  };
+  S.leads.unshift(lead);save();renderLeads(curFilter);renderStats();
+  logActivity(`Imported: ${lead.name||lead.address||'Property'}`);
+  document.getElementById('import-result').innerHTML=`<div class="card-success"><div class="card-label">✅ Lead Saved!</div><p class="text-sm" style="color:var(--success)">Lead added to your list. Go to Leads tab to view it.</p><button class="btn btn-primary mt" onclick="navTo('leads')">View in Leads</button></div>`;
+  document.getElementById('import-text').value='';
+}
+function manualImport(){navTo('leads');openAddLead('new');}
+
+// ══════════════════════════════════════
+// ── COMP ESTIMATOR ──
+// ══════════════════════════════════════
+async function runCompEstimator(){
+  const el=document.getElementById('comp-result');
+  el.innerHTML='<p class="text-sm text-muted">🤖 Estimating ARV for SC market...</p>';
+  const city=v('comp-city'),nb=v('comp-neighborhood'),beds=v('comp-beds'),baths=v('comp-baths'),
+        sqft=v('comp-sqft'),cond=v('comp-condition'),type=v('comp-type'),notes=v('comp-notes');
+  const condMap={heavy:'heavy rehab needed — gutted interior',moderate:'moderate repairs — cosmetic plus systems',light:'light cosmetic updates only',good:'good condition, move-in ready'};
+  const r=await callAI(
+    `Estimate the ARV for this South Carolina property and give me complete deal numbers.
+
+Location: ${city}, SC${nb?' ('+nb+')':''}
+Property: ${type}, ${beds} bed / ${baths} bath${sqft?' · '+sqft+' sqft':''}
+Condition: ${condMap[cond]||cond}
+${notes?'Additional: '+notes:''}
+
+Respond with ONLY this JSON:
+{"arv_low":number,"arv_mid":number,"arv_high":number,"repair_estimate":number,"max_offer":number,"wholesale_fee":number,"deal_quality":"Hot/Good/Thin/No Deal","market_notes":"2 sentence SC market context","negotiation_tip":"one specific tip"}`,
+    'You are an expert SC real estate investor who knows current market values in Columbia, Charleston, Greenville, Spartanburg, Myrtle Beach, Rock Hill, Florence, and Sumter. Give realistic, conservative estimates based on 2024-2025 SC market data.'
+  );
+  try{
+    const clean=r.replace(/```json|```/g,'').trim();
+    const d=JSON.parse(clean);
+    const qualColor={Hot:'var(--success)',Good:'var(--primary)',Thin:'var(--warning)','No Deal':'var(--danger)'}[d.deal_quality]||'var(--text)';
+    el.innerHTML=`
+      <div class="card">
+        <div class="card-label">📊 ARV Estimate — ${city}${nb?', '+nb:''}</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px">
+          <div style="text-align:center;background:var(--surface2);border-radius:9px;padding:11px">
+            <div style="font-size:10px;color:var(--text-muted);font-weight:700;margin-bottom:4px">LOW</div>
+            <div style="font-size:16px;font-weight:800;color:var(--text)">$${(d.arv_low/1000).toFixed(0)}K</div>
+          </div>
+          <div style="text-align:center;background:var(--primary-light);border-radius:9px;padding:11px;border:1.5px solid #C7D7F9">
+            <div style="font-size:10px;color:var(--primary);font-weight:700;margin-bottom:4px">MID (USE THIS)</div>
+            <div style="font-size:18px;font-weight:800;color:var(--primary)">$${(d.arv_mid/1000).toFixed(0)}K</div>
+          </div>
+          <div style="text-align:center;background:var(--surface2);border-radius:9px;padding:11px">
+            <div style="font-size:10px;color:var(--text-muted);font-weight:700;margin-bottom:4px">HIGH</div>
+            <div style="font-size:16px;font-weight:800;color:var(--text)">$${(d.arv_high/1000).toFixed(0)}K</div>
+          </div>
+        </div>
+        <div class="r-row"><span class="r-label">Est. Repair Cost</span><span class="r-val danger">$${Number(d.repair_estimate).toLocaleString()}</span></div>
+        <div class="r-row"><span class="r-label">Max Cash Offer (MAO)</span><span class="r-val primary fw-bold">$${Number(d.max_offer).toLocaleString()}</span></div>
+        <div class="r-row"><span class="r-label">Your Est. Wholesale Fee</span><span class="r-val success">$${Number(d.wholesale_fee).toLocaleString()}</span></div>
+        <div class="r-row"><span class="r-label">Deal Quality</span><span class="r-val fw-bold" style="color:${qualColor}">${d.deal_quality}</span></div>
+        <div style="background:var(--surface2);border-radius:9px;padding:12px;margin-top:10px">
+          <div class="text-xs fw-bold" style="margin-bottom:5px;color:var(--text-secondary)">SC MARKET CONTEXT</div>
+          <p class="text-sm" style="line-height:1.6;color:var(--text-secondary)">${d.market_notes}</p>
+        </div>
+        <div class="card-success" style="margin-top:10px">
+          <div class="card-label" style="color:var(--success)">💡 Negotiation Tip</div>
+          <p class="text-sm" style="color:var(--text-secondary);line-height:1.6">${d.negotiation_tip}</p>
+        </div>
+        <button class="btn btn-primary mt" onclick="useCompForCalc(${d.arv_mid},${d.repair_estimate})">Use in Calculator</button>
+      </div>`;
+  }catch(e){
+    el.innerHTML=`<div class="card"><div class="card-label">AI Estimate</div><p class="text-sm" style="line-height:1.7;white-space:pre-wrap;color:var(--text-secondary)">${esc(r)}</p></div>`;
+  }
+}
+function useCompForCalc(arv,repairs){
+  document.getElementById('c-arv').value=arv;
+  document.getElementById('c-rep').value=repairs;
+  calcDeal();navTo('calc');
+}
+
+// ══════════════════════════════════════
+// ── DEAL SCORER ──
+// ══════════════════════════════════════
+function renderScoreLeadSelect(){
+  const sel=document.getElementById('score-lead-select');
+  if(!sel)return;
+  if(!S.leads.length){sel.innerHTML='<option>No leads yet — add a lead first</option>';return;}
+  sel.innerHTML=S.leads.map((l,i)=>`<option value="${i}">${l.name||'Unknown'} — ${l.address||'No address'}</option>`).join('');
+}
+async function runDealScorer(){
+  const el=document.getElementById('score-result');
+  const idx=parseInt(document.getElementById('score-lead-select').value);
+  const l=S.leads[idx];
+  if(!l){el.innerHTML='<p class="text-sm text-muted">No lead selected.</p>';return;}
+  el.innerHTML='<p class="text-sm text-muted">🤖 Scoring this deal...</p>';
+  const extra=v('score-extra');
+  const r=await callAI(
+    `Score this wholesale real estate deal 1-10 and give me a detailed breakdown.
+
+Lead: ${l.name||'Unknown seller'}
+Address: ${l.address||'Unknown'}, South Carolina
+Property Type: ${l.type||'Unknown'}
+Lead Source: ${l.source||'Unknown'}
+ARV: ${l.arv?'$'+Number(l.arv).toLocaleString():'Not entered'}
+Asking Price: ${l.asking?'$'+Number(l.asking).toLocaleString():'Not entered'}
+Repair Estimate: ${l.repairs?'$'+Number(l.repairs).toLocaleString():'Not entered'}
+Status: ${l.status||'New'}
+Notes: ${l.notes||'None'}
+${extra?'Extra context: '+extra:''}
+
+Respond ONLY with this JSON:
+{"score":number,"grade":"A/B/C/D/F","verdict":"pursue/maybe/walk away","strengths":["strength1","strength2"],"risks":["risk1","risk2"],"next_action":"specific next step to take today","summary":"2 sentence overall assessment"}`,
+    'You are an expert real estate wholesaler. Score deals conservatively and honestly.'
+  );
+  try{
+    const clean=r.replace(/```json|```/g,'').trim();
+    const d=JSON.parse(clean);
+    const scoreColor=d.score>=8?'var(--success)':d.score>=6?'var(--primary)':d.score>=4?'var(--warning)':'var(--danger)';
+    const verdictColor={pursue:'var(--success)',maybe:'var(--warning)','walk away':'var(--danger)'}[d.verdict]||'var(--text)';
+    // save score to lead
+    S.leads[idx].aiScore=d.score;S.leads[idx].aiGrade=d.grade;save();
+    el.innerHTML=`
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+          <div style="width:64px;height:64px;border-radius:50%;background:${scoreColor};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <span style="font-size:26px;font-weight:800;color:white">${d.score}</span>
+          </div>
+          <div>
+            <div style="font-size:22px;font-weight:800;color:${scoreColor}">Grade ${d.grade}</div>
+            <div style="font-size:13px;font-weight:700;color:${verdictColor};text-transform:uppercase;letter-spacing:.5px">${d.verdict}</div>
+          </div>
+        </div>
+        <p class="text-sm text-secondary" style="line-height:1.6;margin-bottom:12px">${d.summary}</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <div class="box-ok"><div class="box-ok-title">✅ Strengths</div>${d.strengths.map(s=>`<p class="text-xs" style="color:var(--text-secondary);margin-top:3px">• ${s}</p>`).join('')}</div>
+          <div class="box-warn"><div class="box-warn-title">⚠️ Risks</div>${d.risks.map(r=>`<p class="text-xs" style="color:var(--text-secondary);margin-top:3px">• ${r}</p>`).join('')}</div>
+        </div>
+        <div class="card-blue"><div class="card-label">Next Action</div><p class="text-sm fw-bold" style="color:var(--primary)">${d.next_action}</p></div>
+      </div>`;
+  }catch(e){
+    el.innerHTML=`<div class="card"><p class="text-sm" style="white-space:pre-wrap;line-height:1.7;color:var(--text-secondary)">${esc(r)}</p></div>`;
+  }
+}
+
+// ══════════════════════════════════════
+// ── OBJECTION HANDLER ──
+// ══════════════════════════════════════
+const OBJECTIONS=[
+  'Your offer is too low',
+  'I need to think about it',
+  'I already have an agent',
+  'I can get more on the open market',
+  'What are you going to do with my house?',
+  'I don\'t know if I can trust you',
+  'I owe more than you\'re offering',
+  'My family says don\'t sell',
+  'I want full retail price',
+  'I need more time — call me back later',
+];
+renderObjections();
+function renderObjections(){
+  const el=document.getElementById('objection-list');if(!el)return;
+  el.innerHTML=OBJECTIONS.map((o,i)=>`
+    <div style="border:1px solid var(--border);border-radius:9px;padding:12px;margin-bottom:8px;cursor:pointer" onclick="handleObjClick(${i},this)" id="obj-${i}">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="text-sm fw-bold">"${o}"</span>
+        <span style="color:var(--primary);font-size:12px;font-weight:700">Get Response →</span>
+      </div>
+      <div id="obj-resp-${i}" style="display:none;margin-top:10px"></div>
+    </div>`).join('');
+}
+async function handleObjClick(i,el){
+  const resp=document.getElementById('obj-resp-'+i);
+  if(resp.style.display==='block'){resp.style.display='none';return;}
+  resp.style.display='block';
+  resp.innerHTML='<p class="text-sm text-muted">Getting response...</p>';
+  const r=await callAI(
+    `A motivated seller in South Carolina just said: "${OBJECTIONS[i]}"\n\nWrite a calm, empathetic, effective response I can say immediately to keep the conversation going. 2-3 sentences max. No salesy language. Sound human.`,
+    'You are an expert real estate wholesaler. Give natural, empathetic seller objection responses.'
+  );
+  resp.innerHTML=`<div style="background:var(--primary-light);border-radius:8px;padding:11px"><p class="text-sm" style="line-height:1.7;color:var(--text)">${esc(r)}</p><button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="copyTxt(this,'${r.replace(/'/g,"\\'")}')">Copy</button></div>`;
+}
+async function handleCustomObj(){
+  const obj=v('custom-obj');if(!obj)return;
+  const el=document.getElementById('custom-obj-result');
+  el.innerHTML='<p class="text-sm text-muted">Getting response...</p>';
+  const r=await callAI(`A SC seller just said: "${obj}"\n\nWrite a calm, empathetic 2-3 sentence response to keep the conversation alive. Sound human, not salesy.`);
+  el.innerHTML=`<div style="background:var(--primary-light);border-radius:9px;padding:12px"><p class="text-sm" style="line-height:1.7">${esc(r)}</p><button class="btn btn-outline btn-sm mt" onclick="copyTxt(this,'${r.replace(/'/g,"\\'")}')">Copy</button></div>`;
+}
+
+// ══════════════════════════════════════
+// ── SCRIPTS LIBRARY ──
+// ══════════════════════════════════════
+function saveScript(){
+  const name=v('script-name'),body=v('script-body');
+  if(!name||!body){alert('Please enter both a name and the script text.');return;}
+  if(!S.scripts)S.scripts=[];
+  S.scripts.unshift({name,body,date:new Date().toLocaleDateString()});
+  save();renderScriptsLibrary();
+  document.getElementById('script-name').value='';
+  document.getElementById('script-body').value='';
+}
+function renderScriptsLibrary(){
+  const el=document.getElementById('scripts-library');if(!el)return;
+  if(!S.scripts||!S.scripts.length){el.innerHTML='<p class="text-sm text-muted">No scripts saved yet. Generate scripts with AI and save them here.</p>';return;}
+  el.innerHTML=S.scripts.map((s,i)=>`
+    <div class="card" style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div><div class="text-sm fw-bold">${esc(s.name)}</div><div class="text-xs text-muted">${s.date}</div></div>
+        <button class="btn btn-danger btn-sm" onclick="deleteScript(${i})">Delete</button>
+      </div>
+      <p class="text-sm text-secondary" style="line-height:1.6;white-space:pre-wrap">${esc(s.body)}</p>
+      <button class="btn btn-outline btn-sm mt" onclick="copyTxt(this,'${s.body.replace(/'/g,"\\'")}')">Copy</button>
+    </div>`).join('');
+}
+function deleteScript(i){S.scripts.splice(i,1);save();renderScriptsLibrary();renderBackupSummary();}
+
+// ══════════════════════════════════════
+// ── BACKUP & EXPORT ──
+// ══════════════════════════════════════
+function exportData(){
+  const data={...S,exported:new Date().toISOString(),version:'dfp3'};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='dealflow-pro-backup-'+new Date().toISOString().split('T')[0]+'.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  logActivity('📦 Data exported / backed up');
+}
+function importData(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      if(data.leads&&Array.isArray(data.leads)){
+        S.leads=data.leads||[];S.buyers=data.buyers||[];
+        S.deals=data.deals||0;S.fees=data.fees||0;
+        S.activity=data.activity||[];S.scripts=data.scripts||[];
+        if(data.apiKey)S.apiKey=data.apiKey;
+        save();renderStats();renderLeads('all');renderBuyers();
+        renderActivity();renderScriptsLibrary();renderBackupSummary();checkApiBtn();
+        document.getElementById('import-status').innerHTML=`<div class="card-success"><div class="card-label">✅ Import Successful</div><p class="text-sm" style="color:var(--success)">${S.leads.length} leads and ${S.buyers.length} buyers restored.</p></div>`;
+        logActivity('📦 Data restored from backup');
+      }else{throw new Error('Invalid file');}
+    }catch(err){
+      document.getElementById('import-status').innerHTML=`<div class="card-danger"><div class="card-label">❌ Import Failed</div><p class="text-sm" style="color:var(--danger)">Invalid backup file. Please use a file exported from DealFlow Pro.</p></div>`;
+    }
+  };
+  reader.readAsText(file);
+}
+function renderBackupSummary(){
+  const els={leads:'bk-leads',buyers:'bk-buyers',deals:'bk-deals',fees:'bk-fees',scripts:'bk-scripts'};
+  const el=id=>document.getElementById(id);
+  if(el('bk-leads'))el('bk-leads').textContent=S.leads.length;
+  if(el('bk-buyers'))el('bk-buyers').textContent=S.buyers.length;
+  if(el('bk-deals'))el('bk-deals').textContent=S.deals;
+  if(el('bk-fees'))el('bk-fees').textContent='$'+(S.fees||0).toLocaleString();
+  if(el('bk-scripts'))el('bk-scripts').textContent=(S.scripts||[]).length;
+}
+
+// ── TOOLS TAB SWITCH ──
+function switchTools(tab,el){
+  ['import','comps','score','objections','scripts','backup'].forEach(t=>{
+    const e=document.getElementById('tool-'+t);if(e)e.style.display='none';
+  });
+  const show=document.getElementById('tool-'+tab);if(show)show.style.display='block';
+  document.querySelectorAll('#tools-tabs .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  if(tab==='score')renderScoreLeadSelect();
+  if(tab==='backup')renderBackupSummary();
+  if(tab==='scripts')renderScriptsLibrary();
+  if(tab==='objections')renderObjections();
+}
+
+function switchFind(tab,el){
+  ['vacant','prefc','tax','d4d','lists'].forEach(t=>document.getElementById('find-'+t).style.display='none');
+  document.getElementById('find-'+tab).style.display='block';
+  document.querySelectorAll('#find-tabs .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  if(tab==='d4d')renderD4D();
+}
+function openSearch(q){window.open('https://google.com/search?q='+encodeURIComponent(q),'_blank');}
+
+// ── MODAL ──
+function setMo(html){document.getElementById('mc').innerHTML=html;document.getElementById('mo').classList.add('open');}
+function closeMo(e){if(!e||e.target===document.getElementById('mo'))document.getElementById('mo').classList.remove('open');}
+
+// ── UTILS ──
+function v(id){return document.getElementById(id)?.value||'';}
+function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function copyTxt(btn,text){
+  navigator.clipboard.writeText(text).then(()=>{
+    const o=btn.textContent;btn.textContent='✅ Copied!';
+    setTimeout(()=>btn.textContent=o,2000);
+  }).catch(()=>{
+    const ta=document.createElement('textarea');
+    ta.value=text;document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    const o=btn.textContent;btn.textContent='✅ Copied!';
+    setTimeout(()=>btn.textContent=o,2000);
+  });
+}
+</script>
+</body>
+</html>
